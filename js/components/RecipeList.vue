@@ -5,7 +5,11 @@
         <h2 class="level-item title">Recipes</h2>
       </div>
       <div class="level-right">
-        <router-link v-if="isLoggedIn" :to="{ name: 'addRecipe' }" class="level-item button">Add recipe</router-link>
+        <router-link
+          v-if="isLoggedIn"
+          :to="{ name: 'addRecipe' }"
+          class="level-item button"
+        >Add recipe</router-link>
       </div>
     </header>
 
@@ -59,12 +63,14 @@
         </div>
       </b-collapse>
     </section>
-    <section class="section">
-      <Loading text="Loading recipes" v-if="isLoading"></Loading>
-      <template v-else>
-        <p v-if="recipeList.Results == 0">No recipe found :(</p>
-        <p v-else-if="recipeList.Results == 1">Found one recipe:</p>
-        <p v-else>Found {{ recipeList.Results }} recipes:</p>
+    <Loading text="Loading recipes" v-if="isLoading"></Loading>
+    <template v-else>
+      <section class="section">
+        <b-message>
+          <p v-if="recipeList.Results == 0">No recipe found :(</p>
+          <p v-else-if="recipeList.Results == 1">Found one recipe:</p>
+          <p v-else>Found {{ recipeList.Results }} recipes:</p>
+        </b-message>
 
         <div class="container">
           <RecipeListItem
@@ -73,17 +79,17 @@
             :key="recipe.ID"
           />
         </div>
+      </section>
 
-        <section class="section" v-if="recipeList.Pages > 1">
-          <b-pagination
-            v-bind:total="recipeList.Pages"
-            v-bind:current.sync="pageNum == null ? 1 : pageNum"
-            v-bind:per-page="1"
-            v-on:change="setPage"
-          />
-        </section>
-      </template>
-    </section>
+      <section class="section" v-if="recipeList.Pages > 1">
+        <b-pagination
+          v-bind:total="recipeList.Pages"
+          v-bind:current.sync="pageNum == null ? 1 : pageNum"
+          v-bind:per-page="1"
+          v-on:change="setPage"
+        />
+      </section>
+    </template>
   </main>
 </template>
 
@@ -93,11 +99,12 @@ import RecipeListItem from "./RecipeListItem.vue";
 import Loading from "./Loading.vue";
 import RecipeList from "../models/RecipeList.ts";
 
-import { Menu, Pagination, Collapse } from "buefy";
+import { Menu, Pagination, Collapse, Message } from "buefy";
 
 Vue.use(Menu);
 Vue.use(Pagination);
 Vue.use(Collapse);
+Vue.use(Message);
 
 export default Vue.extend({
   created: async function() {
