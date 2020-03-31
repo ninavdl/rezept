@@ -1,0 +1,30 @@
+{
+  "name": "rezept-frontend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "parcel build --experimental-scope-hoisting index.html",
+    "frontend": "parcel index.html"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@mdi/font": "^5.0.45",
+    "@vue/component-compiler-utils": "^3.1.1",
+    "babel-polyfill": "^6.26.0",
+    "buefy": "^0.8.13",
+    "cssnano": "^4.1.10",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "parcel": "^1.12.4",
+    "sass": "^1.26.3",
+    "typescript": "^3.8.3",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.1.6",
+    "vue-spinner": "^1.0.3",
+    "vue-template-compiler": "^2.6.11",
+    "vuex": "^3.1.3"
+  }
+}
