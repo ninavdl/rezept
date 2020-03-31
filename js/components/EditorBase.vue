@@ -2,24 +2,18 @@
   <main class="editor">
     <Loading :text="loadingText" v-if="isLoading"></Loading>
     <template v-else>
-      <header>
-        <b-navbar>
-          <template slot="brand">
-            <b-navbar-item>
-              <h2 class="title" v-if="recipe != null">Edit recipe</h2>
-              <h2 class="title" v-else>Add recipe</h2>
-            </b-navbar-item>
-          </template>
-          <template slot="end">
-            <b-navbar-item>
-              <router-link
-                v-if="recipe != null"
+      <header class="level is-mobile">
+        <div class="level-left">
+              <h2 class="level-item title" v-if="recipe.ID != 0">Edit recipe</h2>
+              <h2 class="level-item title" v-else>Add recipe</h2>
+        </div>
+        <div class="level-right">
+          <router-link
+                v-if="recipe.ID != 0"
                 :to="{ name: 'recipe', params: { recipeID: recipe.ID }}"
-                class="button"
+                class="level-item button"
               >Show recipe</router-link>
-            </b-navbar-item>
-          </template>
-        </b-navbar>
+        </div>
       </header>
 
       <form v-on:submit="submit">

@@ -2,49 +2,43 @@
   <main class="recipe">
     <Loading text="Loading recipe" v-if="isLoading"></Loading>
     <template v-else>
-      <header>
-        <b-navbar>
-          <template slot="brand">
-            <b-navbar-item>
-              <h2 class="title">
-                {{recipe.Name}}
-                <small v-if="recipe.Creator != null" class="subtitle">
-                  by
-                  <router-link
-                    :to="{ name: 'list', query: { user: recipe.Creator.Username } }"
-                  >{{ recipe.Creator.DisplayName }}</router-link>
-                </small>
-              </h2>
-            </b-navbar-item>
-          </template>
-          <template slot="end">
-            <b-navbar-item>
-              <router-link
-                :to="{ name: 'editRecipe', params: { recipeID: recipe.ID } }"
-                class="button"
-              >Edit</router-link>
-            </b-navbar-item>
-            <b-navbar-item>
-              <b-button type="button" v-on:click="deleteRecipe">Delete</b-button>
-            </b-navbar-item>
-          </template>
-        </b-navbar>
-
-        <img v-if="recipe.Image != null" v-bind:src="recipe.Image.URL" style="max-height: 40em" />
-
-        <section id="info" class="container">
-          <p>{{ recipe.Description }}</p>
-
-          <section id="tags" v-if="recipe.Tags.length != 0">
-            Tags:
-            <ul class="tags">
-              <li class="tag" v-for="(tag, i) in recipe.Tags" :key="'tag' + i">
-                <router-link :to="{ name: 'list', query: { tags: tag } }">{{tag}}</router-link>
-              </li>
-            </ul>
-          </section>
-        </section>
+      <header class="level is-mobile">
+        <div class="level-left">
+          <div class="level-item">
+            <h2 class="title">
+              {{recipe.Name}}
+              <small v-if="recipe.Creator != null" class="subtitle">
+                by
+                <router-link
+                  :to="{ name: 'list', query: { user: recipe.Creator.Username } }"
+                >{{ recipe.Creator.DisplayName }}</router-link>
+              </small>
+            </h2>
+          </div>
+        </div>
+        <div class="level-right">
+          <router-link
+            :to="{ name: 'editRecipe', params: { recipeID: recipe.ID } }"
+            class="level-item button"
+          >Edit</router-link>
+          <b-button type="button" v-on:click="deleteRecipe" class="level-item">Delete</b-button>
+        </div>
       </header>
+
+      <img v-if="recipe.Image != null" v-bind:src="recipe.Image.URL" style="max-height: 40em" />
+
+      <section id="info" class="container">
+        <p>{{ recipe.Description }}</p>
+
+        <section id="tags" v-if="recipe.Tags.length != 0">
+          Tags:
+          <ul class="tags">
+            <li class="tag" v-for="(tag, i) in recipe.Tags" :key="'tag' + i">
+              <router-link :to="{ name: 'list', query: { tags: tag } }">{{tag}}</router-link>
+            </li>
+          </ul>
+        </section>
+      </section>
 
       <div class="columns">
         <section class="column is-one-third">

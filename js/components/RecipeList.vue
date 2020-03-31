@@ -1,22 +1,21 @@
 <template>
   <main class="recipe-list section">
-    <header>
-      <b-navbar>
-        <template slot="brand">
-          <b-navbar-item>
-            <h2 class="title">Recipes</h2>
-          </b-navbar-item>
-        </template>
-        <template slot="end">
-          <b-navbar-item>
-            <router-link v-if="isLoggedIn" :to="{ name: 'addRecipe' }" class="button">Add recipe</router-link>
-          </b-navbar-item>
-        </template>
-      </b-navbar>
+    <header class="level is-mobile">
+      <div class="level-left">
+        <h2 class="level-item title">Recipes</h2>
+      </div>
+      <div class="level-right">
+        <router-link v-if="isLoggedIn" :to="{ name: 'addRecipe' }" class="level-item button">Add recipe</router-link>
+      </div>
     </header>
 
     <section class="section">
-      <b-collapse class="card" animation="slide" aria-id="search" :open="search.tags.length != 0 || search.keywords.length != 0 || search.user != ''">
+      <b-collapse
+        class="card"
+        animation="slide"
+        aria-id="search"
+        :open="search.tags.length != 0 || search.keywords.length != 0 || search.user != ''"
+      >
         <div
           slot="trigger"
           slot-scope="props"
