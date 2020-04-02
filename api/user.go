@@ -83,7 +83,8 @@ func (api *API) registerUser(r request) error {
 		return err
 	}
 	r.code = 201
-	return nil
+
+	return r.writeJson(newUser(&user))
 }
 
 func (api *API) login(r request) error {
