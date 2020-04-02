@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"strconv"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -58,52 +60,6 @@ func (api *API) newStep(s *db.Step) Step {
 		Text:  s.Text,
 		Image: img,
 	}
-}
-
-type RecipeInfo struct {
-	ID               uint
-	Name             string
-	ShortDescription string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-	Image            *Image
-}
-
-func (r *RecipeInfo) toDB() db.RecipeInfo {
-	ri := db.RecipeInfo{
-		ID:               r.ID,
-		Name:             r.Name,
-		ShortDescription: r.ShortDescription,
-		CreatedAt:        r.CreatedAt,
-		UpdatedAt:        r.UpdatedAt,
-	}
-	if r.Image != nil {
-		ri.ImageID = r.Image.ID
-	}
-	return ri
-}
-
-func (api *API) newRecipeInfo(r *db.RecipeInfo) RecipeInfo {
-	var img *Image
-	if r.Image != nil {
-		apiImage := api.newImage(r.Image)
-		img = &apiImage
-	}
-	return RecipeInfo{
-		ID:               r.ID,
-		Name:             r.Name,
-		ShortDescription: r.ShortDescription,
-		CreatedAt:        r.CreatedAt,
-		UpdatedAt:        r.UpdatedAt,
-		Image:            img,
-	}
-}
-
-type RecipeList struct {
-	Recipes []RecipeInfo
-	Page    uint
-	Pages   uint
-	Results uint
 }
 
 type Recipe struct {
@@ -200,58 +156,99 @@ func (api *API) newRecipe(r *db.Recipe) Recipe {
 	}
 }
 
-type User struct {
-	ID          uint
-	Username    string
-	DisplayName string
-	IsAdmin     bool
-}
-
-func (u *User) toDB() db.User {
-	return db.User{
-		ID:          u.ID,
-		Username:    u.Username,
-		DisplayName: u.DisplayName,
-		IsAdmin:     u.IsAdmin,
+func (api *API) getRecipe(r request) error {
+	id, err := strconv.Atoi(r.params.ByName("id"))
+	if err != nil {
+		return err
 	}
-}
 
-func newUser(u *db.User) User {
-	return User{
-		ID:          u.ID,
-		Username:    u.Username,
-		DisplayName: u.DisplayName,
-		IsAdmin:     u.IsAdmin,
+	dbRecipe := api.db.GetRecipe(uint(id))
+	if dbRecipe == nil {
+		return r.writeError("Recipe not found", 404)
 	}
+	return r.writeJson(api.newRecipe(dbRecipe))
 }
 
-type UserRegistration struct {
-	Username    string `validate:"required"`
-	DisplayName string
-	Password    string `validate:"required,min=8"`
-}
-
-type LoginRequest struct {
-	Username string
-	Password string
-}
-
-type Image struct {
-	ID           uint
-	URL          string
-	ThumbnailURL string
-}
-
-func (api *API) newImage(img *db.Image) Image {
-	return Image{
-		ID:           img.ID,
-		URL:          api.GetImageURL(img.ID),
-		ThumbnailURL: api.GetThumbnailURL(img.ID),
+func (api *API) putRecipe(r request) error {
+	var recipe Recipe
+	err := json.NewDecoder(r.req.Body).Decode(&recipe)
+	if err != nil {
+		return err
 	}
+
+	if !r.validateStruct(&recipe) {
+		return nil
+	}
+
+	recipe.Creator = r.user
+
+	dbRecipe := recipe.toDB()
+	err = api.db.PutRecipe(&dbRecipe)
+	if err != nil {
+		return err
+	}
+
+	r.code = 201
+	return r.writeJson(api.newRecipe(&dbRecipe))
 }
 
-func (api *API) imageToDB(img *Image) db.Image {
-	return db.Image{
-		ID: img.ID,
+func (api *API) updateRecipe(r request) error {
+	id, err := strconv.Atoi(r.params.ByName("id"))
+	if err != nil {
+		return err
 	}
+
+	var recipe Recipe
+	err = json.NewDecoder(r.req.Body).Decode(&recipe)
+	if err != nil {
+		return err
+	}
+
+	if recipe.ID != 0 && recipe.ID != uint(id) {
+		return r.writeError("Cannot update ID of recipe", 404)
+	}
+
+	originalRecipeDB := api.db.GetRecipe(recipe.ID)
+	if originalRecipeDB == nil {
+		return r.writeError("Recipe does not exist", 404)
+	}
+
+	originalRecipe := api.newRecipe(originalRecipeDB)
+	if !r.user.CanModifyRecipe(&originalRecipe) {
+		return r.writeError("Forbidden", 403)
+	}
+
+	recipe.Creator = originalRecipe.Creator
+
+	dbRecipe := recipe.toDB()
+	err = api.db.UpdateRecipe(&dbRecipe)
+	if err != nil {
+		return err
+	}
+	return r.writeJson(api.newRecipe(&dbRecipe))
+}
+
+func (api *API) deleteRecipe(r request) error {
+	id, err := strconv.Atoi(r.params.ByName("id"))
+	if err != nil {
+		return err
+	}
+
+	recipeDb := api.db.GetRecipe(uint(id))
+	if recipeDb == nil {
+		return r.writeError("Recipe not found", 404)
+	}
+
+	recipe := api.newRecipe(recipeDb)
+
+	if !r.user.CanModifyRecipe(&recipe) {
+		return r.writeError("Forbidden", 403)
+	}
+
+	err = api.db.DeleteRecipe(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

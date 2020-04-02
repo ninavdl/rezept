@@ -16,6 +16,26 @@ import (
 	"github.com/sour-dough/rezept-backend/db"
 )
 
+type Image struct {
+	ID           uint
+	URL          string
+	ThumbnailURL string
+}
+
+func (api *API) newImage(img *db.Image) Image {
+	return Image{
+		ID:           img.ID,
+		URL:          api.GetImageURL(img.ID),
+		ThumbnailURL: api.GetThumbnailURL(img.ID),
+	}
+}
+
+func (api *API) imageToDB(img *Image) db.Image {
+	return db.Image{
+		ID: img.ID,
+	}
+}
+
 func (api *API) uploadImage(r request) error {
 	httpContentType := r.req.Header.Get("Content-Type")
 	if httpContentType != "image/jpeg" && httpContentType != "image/png" && httpContentType != "image/webp" {
