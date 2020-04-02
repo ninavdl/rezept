@@ -40,6 +40,32 @@ export default class API {
         return options
     }
 
+    public async upload(method: string, uri: string, file: File, progress: (uploaded: number, fileSize: number) => void): Promise<any> {
+        const api = this;
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = "json";
+            xhr.open(method, api.buildURL(uri), true);
+            xhr.onprogress = e => {
+                progress(e.loaded, e.total);
+            };
+            xhr.onload = () => {
+                if (xhr.status == 201) {
+                    resolve(xhr.response);
+                } else {
+                    reject(xhr.response.Error);
+                }
+            }
+            xhr.onerror = () => {
+                reject("Error");
+            }
+            xhr.setRequestHeader("Content-Type", file.type);
+            xhr.setRequestHeader("Authorization", "Bearer " + api.token);
+            xhr.send(file);
+        })
+
+    }
+
     public async GET(uri: string): Promise<Response> {
         return this.request(uri, "GET");
     }

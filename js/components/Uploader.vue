@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <p>{{message}}</p>
-    <b-upload drag-drop v-on:input="setFile" v-if="thisImage == null">
+    <b-upload drag-drop v-on:input="setFile" v-if="thisImage == null && !uploading">
       <div class="content has-text-centered">
         <p>
           <b-icon icon="upload" size="is-large"></b-icon>
@@ -18,17 +18,18 @@
       type="is-danger"
       icon-left="delete"
     >Delete image</b-button>
-    <progress v-bind:max="fileSize" v-bind:value="uploaded" v-if="uploading"></progress>
+    <b-progress v-bind:max="fileSize" v-bind:value="uploaded" v-if="uploading" />
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { Upload, Icon } from "buefy";
+import { Upload, Icon, Progress } from "buefy";
 import Image from "../models/Image";
 
 Vue.use(Upload);
 Vue.use(Icon);
+Vue.use(Progress);
 
 export default Vue.extend({
   methods: {
@@ -45,14 +46,11 @@ export default Vue.extend({
 
       this.uploading = true;
       try {
-        const uploadedImage = await this.$controller.uploadImage(
-          file,
-          (uploaded, size) => {
-            this.uploaded = uploaded;
-            this.fileSize = size;
-          }
-        );
-        this.thisImage = uploadedImage;
+        this.thisImage = await Image.uploadImage(file, (uploaded, size) => {
+          console.log(uploaded, size);
+          this.uploaded = uploaded;
+          this.fileSize = size;
+        });
         this.$emit("setImage", this.thisImage);
       } catch (e) {
         this.message = e;
@@ -72,7 +70,7 @@ export default Vue.extend({
       message: "",
       uploading: false,
       fileSize: 0,
-      uploaded: 0
+      uploaded: null
     };
   }
 });

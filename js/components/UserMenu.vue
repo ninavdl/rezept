@@ -1,20 +1,21 @@
 <template>
   <div v-if="isLoggedIn">
     <b-navbar-dropdown :label="'Hi ' + user.DisplayName" right boxed>
-      <b-navbar-item v-on:click="logout" v-if="!isLoggingOut">
-        Logout
-      </b-navbar-item>
-      <b-navbar-item v-else>
-        Logging out…
-      </b-navbar-item>
+      <b-navbar-item v-on:click="logout" v-if="!isLoggingOut">Logout</b-navbar-item>
+      <b-navbar-item v-else>Logging out…</b-navbar-item>
       <b-navbar-item
         tag="router-link"
         :to="{ name: 'list', query: { user: user.Username } }"
       >My recipes</b-navbar-item>
     </b-navbar-dropdown>
   </div>
-  <b-navbar-item v-else>
-    <b-button type="is-primary" v-on:click="$emit('showLogin')">Login</b-button>
+  <b-navbar-item tag="div" v-else>
+    <b-navbar-item>
+      <b-button type="is-primary" v-on:click="$emit('showLogin')">Login</b-button>
+    </b-navbar-item>
+    <b-navbar-item>
+      <b-button type="is-primary" v-on:click="$emit('showSignup')">Sign up</b-button>
+    </b-navbar-item>
   </b-navbar-item>
 </template>
 

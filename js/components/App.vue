@@ -8,7 +8,7 @@
           </b-navbar-item>
         </template>
         <template slot="end">
-          <UserMenu v-on:showLogin="showLogin = true" />
+          <UserMenu v-on:showLogin="showLogin = true" v-on:showSignup="showSignup = true" />
         </template>
       </b-navbar>
     </header>
@@ -16,6 +16,9 @@
 
     <b-modal v-bind:active.sync="showLogin" aria-role="dialog" aria-modal>
       <LoginMenu />
+    </b-modal>
+    <b-modal v-bind:active.sync="showSignup" aria-role="dialog" aria-modal>
+      <SignupMenu />
     </b-modal>
   </div>
 </template>
@@ -25,6 +28,7 @@ import Vue from "vue";
 
 import UserMenu from "./UserMenu.vue";
 import LoginMenu from "./LoginMenu.vue";
+import SignupMenu from "./SignupMenu.vue";
 
 import { Navbar, Button, Modal } from "buefy";
 
@@ -45,11 +49,13 @@ export default Vue.extend({
   },
   components: {
     LoginMenu,
+    SignupMenu,
     UserMenu
   },
   data: function() {
     return {
       showLogin: false,
+      showSignup: false,
       isLoading: false,
       childComponent: this.$controller.mainComponent
     };
