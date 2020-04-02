@@ -142,7 +142,7 @@ export default Vue.extend({
       return {
         tags: "tags" in this.query ? this.query.tags.split(",") : [],
         user: "user" in this.query ? this.query.user : "",
-        keywords: "keywords" in this.query ? this.query.keywords.split(",") : ""
+        keywords: "keywords" in this.query ? this.query.keywords.split(",") : []
       };
     },
     pageNum() {
