@@ -21,9 +21,12 @@
 
 <script>
 import Vue from "vue";
-import Loading from "./Loading.vue";
 
 import { Button, Tag } from "buefy";
+
+import User from "../models/User.ts";
+import API from "../models/API.ts";
+import Cookies from "cookies-js";
 
 Vue.use(Button);
 Vue.use(Tag);
@@ -32,8 +35,11 @@ export default Vue.extend({
   methods: {
     logout: async function() {
       this.isLoggingOut = true;
-      await this.$controller.logout();
+      await User.logout();
       this.$store.commit("setUser", {});
+      API.getInstance().setToken(null);
+      Cookies.expire("token");
+
       this.isLoggingOut = false;
     }
   },
@@ -47,9 +53,6 @@ export default Vue.extend({
   },
   data: () => ({
     isLoggingOut: false
-  }),
-  components: {
-    Loading
-  }
+  })
 });
 </script>

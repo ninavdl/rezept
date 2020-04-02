@@ -23,4 +23,8 @@ export default class Recipe extends RecipeInfo {
     public async saveRecipe(): Promise<Recipe> {
         return Recipe.buildModel<Recipe>(API.getInstance().PUT(`recipes`, this), Recipe);
     }
+
+    public async deleteRecipe(): Promise<void> {
+        await API.getInstance().DELETE(`recipes/${this.ID}`);
+    }
 }

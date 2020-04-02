@@ -126,7 +126,6 @@ export default Vue.extend({
   data: function() {
     console.log(this.$route.query);
     return {
-      user: this.$controller.user,
       recipeList: new RecipeList(),
       isLoading: true,
       query: this.$route.query
@@ -135,6 +134,9 @@ export default Vue.extend({
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
+    },
+    user: function() {
+      return this.$store.state.user;
     },
     search() {
       return {

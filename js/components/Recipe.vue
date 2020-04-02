@@ -107,6 +107,9 @@ export default Vue.extend({
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
+    },
+    user: function() {
+      return this.$store.state.user;
     }
   },
   methods: {
@@ -115,25 +118,15 @@ export default Vue.extend({
       console.log(this.recipe);
       this.initialServings = this.recipe.Servings;
     },
-    deleteRecipe: async function(ev) {
-      this.$controller.showLoadingScreen();
-      let res = await this.$controller.delete(
-        `recipes/${this.$props.recipeID}`
-      );
-      if (!res.ok) {
-        let data = await res.json();
-        throw data.Error;
-      }
+    deleteRecipe: async function() {
+      await this.recipe.deleteRecipe();
       this.$router.push({ name: "index" });
     },
     canModify: function() {
-      if (this.$controller.user == null) return false;
-      if (
-        this.recipe.Creator != null &&
-        this.recipe.Creator.ID == this.$controller.user.ID
-      )
+      if (!this.isLoggedIn) return false;
+      if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID)
         return true;
-      return this.$controller.user.IsAdmin;
+      return this.user.IsAdmin;
     }
   },
   components: {

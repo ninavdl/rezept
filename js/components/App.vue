@@ -56,8 +56,7 @@ export default Vue.extend({
     return {
       showLogin: false,
       showSignup: false,
-      isLoading: false,
-      childComponent: this.$controller.mainComponent
+      isLoading: false
     };
   }
 });
