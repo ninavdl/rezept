@@ -128,6 +128,7 @@ class QueryObject {
   async beforeRouteUpdate(to: Route, from: Route, next: Function) {
     this.isLoading = true;
     this.query = to.query;
+    this.search = this.getSearchObject();
     await this.getRecipes();
     this.isLoading = false;
     next();
@@ -138,6 +139,7 @@ export default class RecipeListComponent extends Vue {
   isLoading: boolean = true;
   query: any;
   pageNum: number;
+  search: SearchObject;
 
   get isLoggedIn(): boolean {
     return this.$store.state.isLoggedIn;
@@ -147,7 +149,7 @@ export default class RecipeListComponent extends Vue {
     return this.$store.state.user;
   }
 
-  get search(): SearchObject {
+  getSearchObject(): SearchObject {
     let q = new SearchObject();
     q.tags = "tags" in this.query ? this.query.tags.split(",") : [];
     q.user = "user" in this.query ? this.query.user : "";
@@ -157,6 +159,7 @@ export default class RecipeListComponent extends Vue {
 
   async created(): Promise<void> {
     this.query = this.$route.query;
+    this.search = this.getSearchObject();
     this.pageNum = "page" in this.query ? parseInt(this.query.page) : 1;
     await this.getRecipes();
     this.isLoading = false;
