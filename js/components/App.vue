@@ -23,8 +23,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
+import { Component } from "vue-property-decorator";
 
 import UserMenu from "./UserMenu.vue";
 import LoginMenu from "./LoginMenu.vue";
@@ -36,28 +37,24 @@ Vue.use(Navbar);
 Vue.use(Button);
 Vue.use(Modal);
 
-export default Vue.extend({
-  methods: {
-    loading: function(show) {
-      this.isLoading = show;
-    }
-  },
-  computed: {
-    isLoggedIn() {
-      return this.$store.state.isLoggedIn;
-    }
-  },
+@Component({
   components: {
     LoginMenu,
     SignupMenu,
     UserMenu
-  },
-  data: function() {
-    return {
-      showLogin: false,
-      showSignup: false,
-      isLoading: false
-    };
   }
-});
+})
+export default class MainComponent extends Vue {
+  showLogin: boolean = false;
+  showSignup: boolean = false;
+  isLoading: boolean = false;
+
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn;
+  }
+
+  loading(show): void {
+    this.isLoading = show;
+  }
+}
 </script>

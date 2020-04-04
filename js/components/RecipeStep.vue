@@ -7,10 +7,16 @@
   </li>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
-export default Vue.extend({
-  props: ["step"]
-});
+import Step from "../models/Step";
+
+@Component({})
+export default class RecipeStepComponent extends Vue {
+  @Prop()
+  step!: Step;
+}
 </script>

@@ -19,40 +19,40 @@
   </b-navbar-item>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component } from "vue-property-decorator";
 import Vue from "vue";
 
-import { Button, Tag } from "buefy";
+import User from "../models/User";
+import API from "../models/API";
 
-import User from "../models/User.ts";
-import API from "../models/API.ts";
 import Cookies from "cookies-js";
+
+import { Button, Tag } from "buefy";
 
 Vue.use(Button);
 Vue.use(Tag);
 
-export default Vue.extend({
-  methods: {
-    logout: async function() {
-      this.isLoggingOut = true;
-      await User.logout();
-      this.$store.commit("setUser", {});
-      API.getInstance().setToken(null);
-      Cookies.expire("token");
+@Component({})
+export default class UserMenuComponent extends Vue {
+  isLoggingOut: boolean = false;
 
-      this.isLoggingOut = false;
-    }
-  },
-  computed: {
-    user: function() {
-      return this.$store.state.user;
-    },
-    isLoggedIn() {
-      return this.$store.state.isLoggedIn;
-    }
-  },
-  data: () => ({
-    isLoggingOut: false
-  })
-});
+  get user(): User {
+    return this.$store.state.user;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn;
+  }
+
+  async logout(): Promise<void> {
+    this.isLoggingOut = true;
+    await User.logout();
+    this.$store.commit("setUser", {});
+    API.getInstance().setToken(null);
+    Cookies.expire("token");
+    this.isLoggingOut = false;
+  }
+}
 </script>

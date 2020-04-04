@@ -84,7 +84,7 @@
       <section class="section" v-if="recipeList.Pages > 1">
         <b-pagination
           v-bind:total="recipeList.Pages"
-          v-bind:current.sync="pageNum == null ? 1 : pageNum"
+          v-bind:current.sync="pageNum"
           v-bind:per-page="1"
           v-on:change="setPage"
         />
@@ -93,87 +93,101 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import RecipeListItem from "./RecipeListItem.vue";
 import Loading from "./Loading.vue";
-import RecipeList from "../models/RecipeList.ts";
+import RecipeList from "../models/RecipeList";
+import User from "../models/User";
+import { Component } from "vue-property-decorator";
 
 import { Menu, Pagination, Collapse, Message } from "buefy";
+import { Route } from "vue-router";
 
-Vue.use(Menu);
-Vue.use(Pagination);
-Vue.use(Collapse);
-Vue.use(Message);
+[Menu, Pagination, Collapse, Message].forEach(c => Vue.use(c));
 
-export default Vue.extend({
-  created: async function() {
-    await this.getRecipes();
-    this.isLoading = false;
-  },
+class SearchObject {
+  tags: String[];
+  keywords: String[];
+  user: String;
+  page: number;
+}
+
+class QueryObject {
+  tags: String;
+  keywords: String;
+  user: String;
+  page: String;
+}
+
+@Component({
   components: {
     RecipeListItem,
     Loading
   },
-  async beforeRouteUpdate(to, from, next) {
-    console.log(to, from, next);
+  async beforeRouteUpdate(to: Route, from: Route, next: Function) {
     this.isLoading = true;
     this.query = to.query;
     await this.getRecipes();
     this.isLoading = false;
     next();
-  },
-  data: function() {
-    console.log(this.$route.query);
-    return {
-      recipeList: new RecipeList(),
-      isLoading: true,
-      query: this.$route.query
-    };
-  },
-  computed: {
-    isLoggedIn() {
-      return this.$store.state.isLoggedIn;
-    },
-    user: function() {
-      return this.$store.state.user;
-    },
-    search() {
-      return {
-        tags: "tags" in this.query ? this.query.tags.split(",") : [],
-        user: "user" in this.query ? this.query.user : "",
-        keywords: "keywords" in this.query ? this.query.keywords.split(",") : []
-      };
-    },
-    pageNum() {
-      return "page" in this.query ? this.query.page : 1;
-    }
-  },
-  methods: {
-    getQueryObject() {
-      let queryObject = {};
-      if (this.search.tags.length > 0)
-        queryObject.tags = this.search.tags.join(",");
-      if (this.search.user != "") queryObject.user = this.search.user;
-      if (this.search.keywords.length > 0)
-        queryObject.keywords = this.search.keywords.join(",");
-      return queryObject;
-    },
-    async getRecipes() {
-      this.recipeList = await RecipeList.getRecipes(this.pageNum, this.search);
-    },
-    async setPage(page) {
-      let queryObject = this.getQueryObject();
-      queryObject.page = page;
-      this.$router.push({
-        name: "list",
-        query: queryObject
-      });
-    },
-    updateSearch() {
-      this.$router.push({ name: "list", query: this.getQueryObject() });
-    }
-  },
-  props: ["page"]
-});
+  }
+})
+export default class RecipeListComponent extends Vue {
+  recipeList: RecipeList = new RecipeList();
+  isLoading: boolean = true;
+  query: any;
+  pageNum: number;
+
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn;
+  }
+
+  get user(): User {
+    return this.$store.state.user;
+  }
+
+  get search(): SearchObject {
+    let q = new SearchObject();
+    q.tags = "tags" in this.query ? this.query.tags.split(",") : [];
+    q.user = "user" in this.query ? this.query.user : "";
+    q.keywords = "keywords" in this.query ? this.query.keywords.split(",") : [];
+    return q;
+  }
+
+  async created(): Promise<void> {
+    this.query = this.$route.query;
+    this.pageNum = "page" in this.query ? parseInt(this.query.page) : 1;
+    await this.getRecipes();
+    this.isLoading = false;
+  }
+
+  getQueryObject(): QueryObject {
+    let queryObject = new QueryObject();
+    if (this.search.tags.length > 0)
+      queryObject.tags = this.search.tags.join(",");
+    if (this.search.user != "") queryObject.user = this.search.user;
+    if (this.search.keywords.length > 0)
+      queryObject.keywords = this.search.keywords.join(",");
+    return queryObject;
+  }
+
+  async getRecipes(): Promise<void> {
+    this.recipeList = await RecipeList.getRecipes(this.pageNum, this.search);
+  }
+
+  async setPage(page: number): Promise<void> {
+    this.pageNum = page;
+    let queryObject = this.getQueryObject();
+    queryObject.page = page.toString();
+    this.$router.push({
+      name: "list",
+      query: <any>queryObject
+    });
+  }
+
+  updateSearch(): void {
+    this.$router.push({ name: "list", query: <any>this.getQueryObject() });
+  }
+}
 </script>

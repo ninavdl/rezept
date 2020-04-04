@@ -5,29 +5,28 @@
   </div>
 </template>
 
-<script>
-import SkewLoader from "vue-spinner/src/SkewLoader.vue";
+<script lang="ts">
+import "reflect-metadata";
+import { Prop, Component } from "vue-property-decorator";
 import Vue from "vue";
 
-export default Vue.extend({
-  props: {
-    text: String,
-    inline: Boolean
-  },
-  components: {
-    SkewLoader
-  },
-  computed: {
-    loadingClass() {
-      if (this.inline) return "loading-inline";
-      else return "loading";
-    },
-    loadingSize() {
-        if (this.inline) return "0.5em";
-        else return "1.5em";
-    }
+import SkewLoader from "vue-spinner/src/SkewLoader.vue";
+
+@Component({
+  components: { SkewLoader }
+})
+export default class LoadingComponent extends Vue {
+  @Prop() text!: String;
+  @Prop() inline!: boolean;
+
+  get loadingClass(): String {
+    return this.inline ? "loading-inline" : "loading";
   }
-});
+
+  get loadingSize(): String {
+    return this.inline ? "0.5em" : "1.5em";
+  }
+}
 </script>
 
 <style lang="scss">

@@ -52,93 +52,19 @@
   </li>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
-export default Vue.extend({
-  props: ["ingredient"],
-  data: function() {
-    return {
-      thisIngredient: this.ingredient
-    };
-  }
-});
-</script>
+import Ingredient from "../models/Ingredient";
 
-<style lang="scss" scoped>
-@import "../../sass/_variables.scss";
+@Component({})
+export default class EditorIngredientComponent extends Vue {
+  @Prop()
+  ingredient!: Ingredient;
 
-.ingredient {
-  display: grid;
-  align-items: flex-end;
-  grid-template-columns: 22% 22% 50% 6%;
-  grid-template-rows: auto auto;
-
-  width: 100%;
-  padding: 0.75em 0;
-  &:not(:first-child) {
-    border-top: 1px solid $main-accent;
-  }
-
-  label {
-    &:not(:last-of-type) {
-      grid-column: auto;
-      grid-row: 1;
-    }
-    &:last-of-type {
-      grid-column-start: 1;
-      grid-column-end: 5;
-      grid-row: 2;
-      margin-top: 0.25em;
-    }
-    width: 100%;
-    padding-right: 0.75em;
-  }
-
-  .controls {
-    grid-row: 1;
-    grid-column: 4;
-
-    padding: 0 0.75em 0 0;
-    text-align: right;
-    align-self: flex-end;
-  }
-
-  @media (max-width: $min-pagewidth) {
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto auto;
-
-    label {
-      &:nth-child(1) {
-        grid-column: 1;
-        grid-row: 1;
-      }
-      &:nth-child(2) {
-        grid-column: 2;
-        grid-row: 1;
-      }
-      &:nth-child(3) {
-        grid-column: 1 / 3;
-        grid-row: 2;
-      }
-      &:nth-child(4) {
-        grid-column: 1 / 3;
-        grid-row: 3;
-      }
-    }
-
-    .controls {
-      margin-top: 0.25em;
-      grid-row: 4;
-      grid-column: 1/4;
-      input {
-        width: 100%;
-      }
-    }
-  }
-
-  input {
-    width: 100%;
-  }
+  thisIngredient: Ingredient = this.ingredient;
 }
-</style>
+
+</script>

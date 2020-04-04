@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit="login">
+  <form v-on:submit="signup">
     <div class="modal-card" style="width: auto">
       <header class="modal-card-head">
         <h2 class="modal-card-title">Signup</h2>
@@ -8,7 +8,7 @@
       <section class="modal-card-body" v-if="!isLoading">
         <template v-if="!isLoading">
           <b-field label="Display name">
-            <b-input type="password" v-model="registration.DisplayName" required />
+            <b-input type="string" v-model="registration.DisplayName" required />
           </b-field>
           <b-field label="Username">
             <b-input type="string" v-model="registration.Username" required />
@@ -26,33 +26,36 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component } from "vue-property-decorator"
 import Vue from "vue";
+
 import Loading from "./Loading.vue";
-import UserRegistration from "../models/UserRegistration.ts";
+
+import LoginRequest from "../models/LoginRequest";
+import UserRegistration from "../models/UserRegistration";
+import API from "../models/API";
+import User from "../models/User";
+
+import Cookies from "cookies-js";
 
 import { Modal, Button, Field, Input } from "buefy";
-import LoginRequest from "../models/LoginRequest";
-import API from "../models/API.ts";
-import User from "../models/User.ts";
-import Cookies from "cookies-js";
 
 Vue.use(Modal);
 Vue.use(Button);
 Vue.use(Field);
 Vue.use(Input);
 
-export default Vue.extend({
-  data: () => ({
-    isLoading: false,
-    message: "",
-    registration: new UserRegistration()
-  }),
-  components: {
-    Loading
-  },
-  methods: {
-    login: async function(ev) {
+@Component({
+  components: { Loading }
+})
+export default class SignupMenuComponent extends Vue {
+  isLoading: boolean = false;
+  message: String = "";
+  registration: UserRegistration = new UserRegistration();
+
+  async signup(ev): Promise<void> {
       ev.preventDefault();
       this.isLoading = true;
       try {
@@ -71,6 +74,6 @@ export default Vue.extend({
         this.message = e;
       }
     }
-  }
-});
+
+}
 </script>

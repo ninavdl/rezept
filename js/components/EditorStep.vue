@@ -16,53 +16,32 @@
   </li>
 </template>
 
-<style lang="scss" scoped>
-@import "../../sass/_variables.scss";
-
-#steps {
-  padding-left: 1.5em;
-}
-
-.step {
-  margin-left: 1.5em;
-}
-
-.step > div {
-  display: flex;
-  width: 100%;
-  padding-left: 1em;
-  padding-right: 0.75em;
-
-  textarea {
-    width: 100%;
-    margin-right: 0.75em;
-  }
-
-  margin-bottom: 1em;
-}
-</style>
-
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
+
 import Uploader from "./Uploader.vue";
 
-export default Vue.extend({
-  data: function() {
-    return {
-      thisStep: this.step
-    };
-  },
-  methods: {
-    updateStepText() {
-      this.$emit("update:step", this.thisStep);
-    },
-    setImage(image) {
-      console.log(image);
-      this.thisStep.Image = image;
-      this.$emit("update:step", this.thisStep);
-    }
-  },
-  props: ["step"],
+import Step from "../models/Step";
+import Image from "../models/Image";
+
+@Component({
   components: { Uploader }
-});
+})
+export default class EditorStepComponent extends Vue {
+  @Prop()
+  step!: Step;
+
+  thisStep: Step = this.step;
+
+  updateStepText(): void {
+    this.$emit("update:step", this.thisStep);
+  }
+
+  setImage(image: Image): void {
+    this.thisStep.Image = image;
+    this.$emit("update:step", this.thisStep);
+  }
+}
 </script>

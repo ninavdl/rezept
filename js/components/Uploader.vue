@@ -22,58 +22,61 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { Upload, Icon, Progress } from "buefy";
+
 import Image from "../models/Image";
+
+import { Upload, Icon, Progress } from "buefy";
 
 Vue.use(Upload);
 Vue.use(Icon);
 Vue.use(Progress);
 
-export default Vue.extend({
-  methods: {
-    async setFile(file) {
-      if (!file.type.match("image/(jpeg|png|webp)")) {
-        this.message = "File must be of type jpeg, png or webp";
-        return;
-      }
+@Component({})
+export default class UploaderComponent extends Vue {
+  @Prop()
+  image!: Image;
 
-      if (file.size > 5 * 1024 * 1024) {
-        this.message = "Max. file size: 5MB";
-        return;
-      }
+  thisImage: Image = this.image;
+  message: String = "";
+  uploading: boolean = false;
+  fileSize: number = 0;
+  uploaded: number = null;
 
-      this.uploading = true;
-      try {
-        this.thisImage = await Image.uploadImage(file, (uploaded, size) => {
-          console.log(uploaded, size);
-          this.uploaded = uploaded;
-          this.fileSize = size;
-        });
-        this.$emit("setImage", this.thisImage);
-      } catch (e) {
-        this.message = e;
-      } finally {
-        this.uploading = false;
-      }
-    },
-    removeImage() {
-      this.thisImage = null;
-      this.$emit("setImage", null);
+  async setFile(file): Promise<void> {
+    if (!file.type.match("image/(jpeg|png|webp)")) {
+      this.message = "File must be of type jpeg, png or webp";
+      return;
     }
-  },
-  props: ["image"],
-  data: function() {
-    return {
-      thisImage: this.image,
-      message: "",
-      uploading: false,
-      fileSize: 0,
-      uploaded: null
-    };
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.message = "Max. file size: 5MB";
+      return;
+    }
+
+    this.uploading = true;
+    try {
+      this.thisImage = await Image.uploadImage(file, (uploaded, size) => {
+        console.log(uploaded, size);
+        this.uploaded = uploaded;
+        this.fileSize = size;
+      });
+      this.$emit("setImage", this.thisImage);
+    } catch (e) {
+      this.message = e;
+    } finally {
+      this.uploading = false;
+    }
   }
-});
+
+  removeImage(): void {
+    this.thisImage = null;
+    this.$emit("setImage", null);
+  }
+}
 </script>
 
 <style lang="scss" scoped>

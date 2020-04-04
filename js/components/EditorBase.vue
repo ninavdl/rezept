@@ -4,15 +4,15 @@
     <template v-else>
       <header class="level is-mobile">
         <div class="level-left">
-              <h2 class="level-item title" v-if="recipe.ID != 0">Edit recipe</h2>
-              <h2 class="level-item title" v-else>Add recipe</h2>
+          <h2 class="level-item title" v-if="recipe.ID != 0">Edit recipe</h2>
+          <h2 class="level-item title" v-else>Add recipe</h2>
         </div>
         <div class="level-right">
           <router-link
-                v-if="recipe.ID != 0"
-                :to="{ name: 'recipe', params: { recipeID: recipe.ID }}"
-                class="level-item button"
-              >Show recipe</router-link>
+            v-if="recipe.ID != 0"
+            :to="{ name: 'recipe', params: { recipeID: recipe.ID }}"
+            class="level-item button"
+          >Show recipe</router-link>
         </div>
       </header>
 
@@ -92,14 +92,19 @@
   </main>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
 import EditorStep from "./EditorStep.vue";
 import EditorIngredient from "./EditorIngredient.vue";
-import Vue from "vue";
 import Loading from "./Loading.vue";
 import Uploader from "./Uploader.vue";
-import Recipe from "../models/Recipe.ts";
-import Ingredient from "../models/Ingredient.ts";
+
+import Recipe from "../models/Recipe";
+import Ingredient from "../models/Ingredient";
+import Step from "../models/Step";
+import Image from "../models/Image";
 
 import { Numberinput, Input, Taginput } from "buefy";
 
@@ -107,35 +112,33 @@ Vue.use(Numberinput);
 Vue.use(Input);
 Vue.use(Taginput);
 
-export default Vue.extend({
-  methods: {
-    addIngredient: async function(ev) {
-      this.recipe.Ingredients.push(new Ingredient());
-    },
-    addStep: async function(ev) {
-      this.recipe.Steps.push("");
-    },
-    setImage: function(image) {
-      this.recipe.Image = image;
-    },
-    updateStep(i, step) {
-      this.recipe.Steps[i] = step;
-      console.log(step);
-    },
-    updateIngredient(i, ingredient) {
-      this.recipe.Ingredients[i] = ingredient;
-    }
-  },
-  data: () => ({
-    recipe: new Recipe(),
-    isLoading: false,
-    loadingText: "Loading recipe"
-  }),
+@Component({
   components: {
     EditorStep,
     Loading,
     EditorIngredient,
     Uploader
   }
-});
+})
+export default class EditorBaseComponent extends Vue {
+  recipe: Recipe = new Recipe();
+  isLoading: boolean = false;
+  loadingText: String = "Loading recipe";
+
+  addIngredient(ev): void {
+    this.recipe.Ingredients.push(new Ingredient());
+  }
+  addStep(ev): void {
+    this.recipe.Steps.push(new Step());
+  }
+  setImage(image: Image): void {
+    this.recipe.Image = image;
+  }
+  updateStep(i: number, step: Step): void {
+    this.recipe.Steps[i] = step;
+  }
+  updateIngredient(i: number, ingredient: Ingredient): void {
+    this.recipe.Ingredients[i] = ingredient;
+  }
+}
 </script>

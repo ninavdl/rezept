@@ -1,16 +1,25 @@
 <template>
   <li>
-    <span>{{ Amount | round(2) }}</span>
-    <span>{{ Unit }}</span>
-    <span>{{ Name }}</span>
-    <small>{{ Note }}</small>
+    <span>{{ amount | round(2) }}</span>
+    <span>{{ ingredient.Unit }}</span>
+    <span>{{ ingredient.Name }}</span>
+    <small>{{ ingredient.Note }}</small>
   </li>
 </template>
 
-<script>
+<script lang="ts">
+import "reflect-metadata";
+import { Prop, Component } from "vue-property-decorator"
 import Vue from "vue";
 
-export default Vue.extend({
-  props: ["Name", "Amount", "Unit", "Note"]
-});
+import Ingredient from "../models/Ingredient";
+
+@Component({})
+export default class RecipeIngredientComponent extends Vue {
+  @Prop()
+  ingredient!: Ingredient;
+
+  @Prop()
+  amount!: number;
+}
 </script>

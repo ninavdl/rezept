@@ -16,7 +16,7 @@
             </h2>
           </div>
         </div>
-        <div class="level-right">
+        <div class="level-right" v-if="canModify">
           <router-link
             :to="{ name: 'editRecipe', params: { recipeID: recipe.ID } }"
             class="level-item button"
@@ -58,8 +58,8 @@
               <ul style="list-style: disc; margin-left: 1em">
                 <RecipeIngredient
                   v-for="ingredient in recipe.Ingredients"
-                  v-bind="ingredient"
-                  v-bind:Amount="ingredient.Amount / initialServings * recipe.Servings"
+                  v-bind:ingredient="ingredient"
+                  v-bind:amount="ingredient.Amount / initialServings * recipe.Servings"
                   :key="ingredient.ID"
                 />
               </ul>
@@ -80,12 +80,17 @@
   </main>
 </template>
 
-<script>
-import Recipe from "../models/Recipe.ts";
+<script lang="ts">
+import "reflect-metadata";
+import { Prop, Component } from "vue-property-decorator";
+import Vue from "vue";
+
+import Recipe from "../models/Recipe";
+import User from "../models/User";
+
 import RecipeStep from "./RecipeStep.vue";
 import RecipeIngredient from "./RecipeIngredient.vue";
 import Loading from "./Loading.vue";
-import Vue from "vue";
 
 import { Numberinput, Field, Navbar } from "buefy";
 
@@ -93,46 +98,50 @@ Vue.use(Numberinput);
 Vue.use(Field);
 Vue.use(Navbar);
 
-export default Vue.extend({
-  created: async function() {
-    await this.getRecipe();
-    this.isLoading = false;
-  },
-  props: ["recipeID"],
-  data: () => ({
-    recipe: null,
-    isLoading: true,
-    initialServings: 0 // required to calculate amounts of ingredients when the number of servings changes
-  }),
-  computed: {
-    isLoggedIn() {
-      return this.$store.state.isLoggedIn;
-    },
-    user: function() {
-      return this.$store.state.user;
-    }
-  },
-  methods: {
-    getRecipe: async function() {
-      this.recipe = await Recipe.getRecipe(this.$props.recipeID);
-      console.log(this.recipe);
-      this.initialServings = this.recipe.Servings;
-    },
-    deleteRecipe: async function() {
-      await this.recipe.deleteRecipe();
-      this.$router.push({ name: "index" });
-    },
-    canModify: function() {
-      if (!this.isLoggedIn) return false;
-      if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID)
-        return true;
-      return this.user.IsAdmin;
-    }
-  },
+@Component({
   components: {
     RecipeIngredient,
     RecipeStep,
     Loading
   }
-});
+})
+export default class RecipeComponent extends Vue {
+  @Prop()
+  recipeID!: number;
+
+  recipe: Recipe = null;
+  isLoading: boolean = true;
+  initialServings: number = 0; // required to calculate amounts of ingredients when the number of servings changes
+
+  async created(): Promise<void> {
+    await this.getRecipe();
+    this.isLoading = false;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.$store.state.isLoggedIn;
+  }
+
+  get user(): User {
+    return this.$store.state.user;
+  }
+
+  get canModify(): boolean {
+    if (!this.isLoggedIn) return false;
+    if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID)
+      return true;
+    return this.user.IsAdmin;
+  }
+
+  async getRecipe(): Promise<void> {
+    this.recipe = await Recipe.getRecipe(this.recipeID);
+    console.log(this.recipe);
+    this.initialServings = this.recipe.Servings;
+  }
+
+  async deleteRecipe(): Promise<void> {
+    await this.recipe.deleteRecipe();
+    this.$router.push({ name: "list" });
+  }
+}
 </script>
