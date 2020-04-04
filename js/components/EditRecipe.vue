@@ -25,7 +25,7 @@ export default class EditRecipeComponent extends EditorBase {
     ev.preventDefault();
     this.loadingText = "Saving recipe";
     this.isLoading = true;
-    this.$data.recipe.updateRecipe();
+    await this.$data.recipe.updateRecipe();
     this.isLoading = false;
     this.$router.push({
       name: "recipe",
