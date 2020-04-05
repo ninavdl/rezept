@@ -1,17 +1,20 @@
-import Model from "./Model";
-import API from "./API";
+import Model from './Model';
+import API from './API';
 
 export default class User extends Model {
-    ID: number = 0;
-    Username: string = "";
-    DisplayName: string = "";
-    IsAdmin: boolean = false;
+  ID = 0;
 
-    static async getLoggedInUser(): Promise<User> {
-        return User.buildModel<User>(API.getInstance().GET("login"), User);
-    }
+  Username = '';
 
-    static async logout(): Promise<void> {
-        await API.getInstance().DELETE("login");
-    }
+  DisplayName = '';
+
+  IsAdmin = false;
+
+  static async getLoggedInUser(): Promise<User> {
+    return User.buildModel<User>(API.getInstance().GET('login'), User);
+  }
+
+  static async logout(): Promise<void> {
+    await API.getInstance().DELETE('login');
+  }
 }

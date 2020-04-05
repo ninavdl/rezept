@@ -82,17 +82,19 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Prop, Component } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Prop, Component } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Recipe from "../models/Recipe";
-import User from "../models/User";
+import {
+  Numberinput, Field, Navbar, Loading,
+} from 'buefy';
+import Recipe from '../models/Recipe';
+import User from '../models/User';
 
-import RecipeStep from "./RecipeStep.vue";
-import RecipeIngredient from "./RecipeIngredient.vue";
+import RecipeStep from './RecipeStep.vue';
+import RecipeIngredient from './RecipeIngredient.vue';
 
-import { Numberinput, Field, Navbar, Loading } from "buefy";
 
 Vue.use(Numberinput);
 Vue.use(Field);
@@ -102,16 +104,18 @@ Vue.use(Loading);
 @Component({
   components: {
     RecipeIngredient,
-    RecipeStep
-  }
+    RecipeStep,
+  },
 })
 export default class RecipeComponent extends Vue {
   @Prop()
   recipeID!: number;
 
   recipe: Recipe = new Recipe();
-  isLoading: boolean = true;
-  initialServings: number = 0; // required to calculate amounts of ingredients when the number of servings changes
+
+  isLoading = true;
+
+  initialServings = 0; // required to calculate amounts of ingredients when the number of servings changes
 
   async created(): Promise<void> {
     await this.getRecipe();
@@ -128,8 +132,7 @@ export default class RecipeComponent extends Vue {
 
   get canModify(): boolean {
     if (!this.isLoggedIn) return false;
-    if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID)
-      return true;
+    if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID) return true;
     return this.user.IsAdmin;
   }
 
@@ -141,7 +144,7 @@ export default class RecipeComponent extends Vue {
 
   async deleteRecipe(): Promise<void> {
     await this.recipe.deleteRecipe();
-    this.$router.push({ name: "list" });
+    this.$router.push({ name: 'list' });
   }
 }
 </script>

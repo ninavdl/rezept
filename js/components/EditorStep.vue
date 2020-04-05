@@ -17,17 +17,17 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Uploader from "./Uploader.vue";
+import Uploader from './Uploader.vue';
 
-import Step from "../models/Step";
-import Image from "../models/Image";
+import Step from '../models/Step';
+import Image from '../models/Image';
 
 @Component({
-  components: { Uploader }
+  components: { Uploader },
 })
 export default class EditorStepComponent extends Vue {
   @Prop()
@@ -36,12 +36,12 @@ export default class EditorStepComponent extends Vue {
   thisStep: Step = this.step;
 
   updateStepText(): void {
-    this.$emit("update:step", this.thisStep);
+    this.$emit('update:step', this.thisStep);
   }
 
   setImage(image: Image): void {
     this.thisStep.Image = image;
-    this.$emit("update:step", this.thisStep);
+    this.$emit('update:step', this.thisStep);
   }
 }
 </script>

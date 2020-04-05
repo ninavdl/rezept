@@ -1,18 +1,18 @@
 <script lang="ts">
-import EditorBase from "./EditorBase.vue";
+import { Component } from 'vue-property-decorator';
+import EditorBase from './EditorBase.vue';
 
-import { Component } from "vue-property-decorator";
 
 @Component({})
 export default class AddRecipeComponent extends EditorBase {
-  heading: String = "Add recipe";
+  heading = 'Add recipe';
 
   async submit(ev) {
     ev.preventDefault();
     this.isLoading = true;
     const recipe = await this.$data.recipe.saveRecipe();
     this.isLoading = true;
-    this.$router.push({ name: "recipe", params: { recipeID: recipe.ID } });
+    this.$router.push({ name: 'recipe', params: { recipeID: recipe.ID } });
   }
 }
 </script>

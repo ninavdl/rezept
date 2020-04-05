@@ -88,19 +88,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 
-import EditorStep from "./EditorStep.vue";
-import EditorIngredient from "./EditorIngredient.vue";
-import Uploader from "./Uploader.vue";
+import {
+  Numberinput, Input, Taginput, Loading,
+} from 'buefy';
+import EditorStep from './EditorStep.vue';
+import EditorIngredient from './EditorIngredient.vue';
+import Uploader from './Uploader.vue';
 
-import Recipe from "../models/Recipe";
-import Ingredient from "../models/Ingredient";
-import Step from "../models/Step";
-import Image from "../models/Image";
+import Recipe from '../models/Recipe';
+import Ingredient from '../models/Ingredient';
+import Step from '../models/Step';
+import Image from '../models/Image';
 
-import { Numberinput, Input, Taginput, Loading } from "buefy";
 
 Vue.use(Numberinput);
 Vue.use(Input);
@@ -111,26 +113,32 @@ Vue.use(Loading);
   components: {
     EditorStep,
     EditorIngredient,
-    Uploader
-  }
+    Uploader,
+  },
 })
 export default class EditorBaseComponent extends Vue {
   recipe: Recipe = new Recipe();
-  isLoading: boolean = false;
-  heading: String = "";
+
+  isLoading = false;
+
+  heading = '';
 
   addIngredient(ev): void {
     this.recipe.Ingredients.push(new Ingredient());
   }
+
   addStep(ev): void {
     this.recipe.Steps.push(new Step());
   }
+
   setImage(image: Image): void {
     this.recipe.Image = image;
   }
+
   updateStep(i: number, step: Step): void {
     this.recipe.Steps[i] = step;
   }
+
   updateIngredient(i: number, ingredient: Ingredient): void {
     this.recipe.Ingredients[i] = ingredient;
   }

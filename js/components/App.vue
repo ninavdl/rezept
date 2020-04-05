@@ -24,14 +24,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 
-import UserMenu from "./UserMenu.vue";
-import LoginMenu from "./LoginMenu.vue";
-import SignupMenu from "./SignupMenu.vue";
+import { Navbar, Button, Modal } from 'buefy';
+import UserMenu from './UserMenu.vue';
+import LoginMenu from './LoginMenu.vue';
+import SignupMenu from './SignupMenu.vue';
 
-import { Navbar, Button, Modal } from "buefy";
 
 Vue.use(Navbar);
 Vue.use(Button);
@@ -41,13 +41,15 @@ Vue.use(Modal);
   components: {
     LoginMenu,
     SignupMenu,
-    UserMenu
-  }
+    UserMenu,
+  },
 })
 export default class MainComponent extends Vue {
-  showLogin: boolean = false;
-  showSignup: boolean = false;
-  isLoading: boolean = false;
+  showLogin = false;
+
+  showSignup = false;
+
+  isLoading = false;
 
   get isLoggedIn(): boolean {
     return this.$store.state.isLoggedIn;

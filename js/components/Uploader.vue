@@ -23,13 +23,13 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Image from "../models/Image";
+import { Upload, Icon, Progress } from 'buefy';
+import Image from '../models/Image';
 
-import { Upload, Icon, Progress } from "buefy";
 
 Vue.use(Upload);
 Vue.use(Icon);
@@ -41,19 +41,23 @@ export default class UploaderComponent extends Vue {
   image!: Image;
 
   thisImage: Image = this.image;
-  message: String = "";
-  uploading: boolean = false;
-  fileSize: number = 0;
+
+  message = '';
+
+  uploading = false;
+
+  fileSize = 0;
+
   uploaded: number = null;
 
   async setFile(file): Promise<void> {
-    if (!file.type.match("image/(jpeg|png|webp)")) {
-      this.message = "File must be of type jpeg, png or webp";
+    if (!file.type.match('image/(jpeg|png|webp)')) {
+      this.message = 'File must be of type jpeg, png or webp';
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      this.message = "Max. file size: 5MB";
+      this.message = 'Max. file size: 5MB';
       return;
     }
 
@@ -64,7 +68,7 @@ export default class UploaderComponent extends Vue {
         this.uploaded = uploaded;
         this.fileSize = size;
       });
-      this.$emit("setImage", this.thisImage);
+      this.$emit('setImage', this.thisImage);
     } catch (e) {
       this.message = e;
     } finally {
@@ -74,7 +78,7 @@ export default class UploaderComponent extends Vue {
 
   removeImage(): void {
     this.thisImage = null;
-    this.$emit("setImage", null);
+    this.$emit('setImage', null);
   }
 }
 </script>

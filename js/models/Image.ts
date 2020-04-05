@@ -1,14 +1,16 @@
-import Model from "./Model";
-import API from "./API";
+import Model from './Model';
+import API from './API';
 
 export default class Image extends Model {
-    ID: number;
-    URL: string;
-    ThumbnailURL: string;
+  ID: number;
 
-    static async uploadImage(file: File, onProgress: (uploaded: number, total: number) => void): Promise<Image> {
-        let response = await API.getInstance().upload("PUT", "image", file, onProgress);
+  URL: string;
 
-        return <Image>response;
-    }
+  ThumbnailURL: string;
+
+  static async uploadImage(file: File, onProgress: (uploaded: number, total: number) => void): Promise<Image> {
+    const response = await API.getInstance().upload('PUT', 'image', file, onProgress);
+
+    return <Image>response;
+  }
 }

@@ -53,11 +53,11 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Ingredient from "../models/Ingredient";
+import Ingredient from '../models/Ingredient';
 
 @Component({})
 export default class EditorIngredientComponent extends Vue {

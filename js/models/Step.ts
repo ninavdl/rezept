@@ -1,7 +1,8 @@
-import Model from "./Model";
-import Image from "./Image";
+import Model from './Model';
+import Image from './Image';
 
 export default class Step extends Model {
-    Text: string = "";
-    Image: Image = null;
+  Text = '';
+
+  Image: Image = null;
 }

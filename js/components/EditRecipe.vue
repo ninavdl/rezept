@@ -1,17 +1,17 @@
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
 
-import EditorBase from "./EditorBase.vue";
+import EditorBase from './EditorBase.vue';
 
-import Recipe from "../models/Recipe";
+import Recipe from '../models/Recipe';
 
 @Component({})
 export default class EditRecipeComponent extends EditorBase {
   @Prop()
   recipeID!: number;
 
-  heading: String = "Edit recipe";
+  heading = 'Edit recipe';
 
   async created(): Promise<void> {
     this.isLoading = true;
@@ -25,13 +25,13 @@ export default class EditRecipeComponent extends EditorBase {
 
   async submit(ev): Promise<void> {
     ev.preventDefault();
-    this.loadingText = "Saving recipe";
+    this.loadingText = 'Saving recipe';
     this.isLoading = true;
     await this.$data.recipe.updateRecipe();
     this.isLoading = false;
     this.$router.push({
-      name: "recipe",
-      params: { recipeID: this.$data.recipe.ID }
+      name: 'recipe',
+      params: { recipeID: this.$data.recipe.ID },
     });
   }
 }

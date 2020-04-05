@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Recipe from "../models/Recipe";
+import { Menu } from 'buefy';
+import Recipe from '../models/Recipe';
 
-import { Menu } from "buefy";
 Vue.use(Menu);
 
 @Component({})

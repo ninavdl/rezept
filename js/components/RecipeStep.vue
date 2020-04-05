@@ -8,11 +8,11 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import Step from "../models/Step";
+import Step from '../models/Step';
 
 @Component({})
 export default class RecipeStepComponent extends Vue {

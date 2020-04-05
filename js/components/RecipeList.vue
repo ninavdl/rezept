@@ -94,34 +94,42 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import RecipeListItem from "./RecipeListItem.vue";
-import RecipeList from "../models/RecipeList";
-import User from "../models/User";
-import { Component } from "vue-property-decorator";
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import {
+  Menu, Pagination, Collapse, Message, Loading,
+} from 'buefy';
+import { Route } from 'vue-router';
+import RecipeListItem from './RecipeListItem.vue';
+import RecipeList from '../models/RecipeList';
+import User from '../models/User';
 
-import { Menu, Pagination, Collapse, Message, Loading } from "buefy";
-import { Route } from "vue-router";
 
-[Menu, Pagination, Collapse, Message, Loading].forEach(c => Vue.use(c));
+[Menu, Pagination, Collapse, Message, Loading].forEach((c) => Vue.use(c));
 
 class SearchObject {
-  tags: String[];
-  keywords: String[];
-  user: String;
+  tags: string[];
+
+  keywords: string[];
+
+  user: string;
+
   page: number;
 }
 
 class QueryObject {
-  tags: String;
-  keywords: String;
-  user: String;
-  page: String;
+  tags: string;
+
+  keywords: string;
+
+  user: string;
+
+  page: string;
 }
 
 @Component({
   components: {
-    RecipeListItem
+    RecipeListItem,
   },
   async beforeRouteUpdate(to: Route, from: Route, next: Function) {
     this.isLoading = true;
@@ -130,13 +138,17 @@ class QueryObject {
     await this.getRecipes();
     this.isLoading = false;
     next();
-  }
+  },
 })
 export default class RecipeListComponent extends Vue {
   recipeList: RecipeList = new RecipeList();
-  isLoading: boolean = true;
+
+  isLoading = true;
+
   query: any;
+
   pageNum: number;
+
   search: SearchObject;
 
   get isLoggedIn(): boolean {
@@ -148,28 +160,26 @@ export default class RecipeListComponent extends Vue {
   }
 
   getSearchObject(): SearchObject {
-    let q = new SearchObject();
-    q.tags = "tags" in this.query ? this.query.tags.split(",") : [];
-    q.user = "user" in this.query ? this.query.user : "";
-    q.keywords = "keywords" in this.query ? this.query.keywords.split(",") : [];
+    const q = new SearchObject();
+    q.tags = 'tags' in this.query ? this.query.tags.split(',') : [];
+    q.user = 'user' in this.query ? this.query.user : '';
+    q.keywords = 'keywords' in this.query ? this.query.keywords.split(',') : [];
     return q;
   }
 
   async created(): Promise<void> {
     this.query = this.$route.query;
     this.search = this.getSearchObject();
-    this.pageNum = "page" in this.query ? parseInt(this.query.page) : 1;
+    this.pageNum = 'page' in this.query ? parseInt(this.query.page) : 1;
     await this.getRecipes();
     this.isLoading = false;
   }
 
   getQueryObject(): QueryObject {
-    let queryObject = new QueryObject();
-    if (this.search.tags.length > 0)
-      queryObject.tags = this.search.tags.join(",");
-    if (this.search.user != "") queryObject.user = this.search.user;
-    if (this.search.keywords.length > 0)
-      queryObject.keywords = this.search.keywords.join(",");
+    const queryObject = new QueryObject();
+    if (this.search.tags.length > 0) queryObject.tags = this.search.tags.join(',');
+    if (this.search.user != '') queryObject.user = this.search.user;
+    if (this.search.keywords.length > 0) queryObject.keywords = this.search.keywords.join(',');
     return queryObject;
   }
 
@@ -179,16 +189,16 @@ export default class RecipeListComponent extends Vue {
 
   async setPage(page: number): Promise<void> {
     this.pageNum = page;
-    let queryObject = this.getQueryObject();
+    const queryObject = this.getQueryObject();
     queryObject.page = page.toString();
     this.$router.push({
-      name: "list",
-      query: <any>queryObject
+      name: 'list',
+      query: <any>queryObject,
     });
   }
 
   updateSearch(): void {
-    this.$router.push({ name: "list", query: <any>this.getQueryObject() });
+    this.$router.push({ name: 'list', query: <any> this.getQueryObject() });
   }
 }
 </script>

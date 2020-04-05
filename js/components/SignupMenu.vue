@@ -27,18 +27,19 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+import 'reflect-metadata';
+import { Component } from 'vue-property-decorator';
+import Vue from 'vue';
 
-import LoginRequest from "../models/LoginRequest";
-import UserRegistration from "../models/UserRegistration";
-import API from "../models/API";
-import User from "../models/User";
+import Cookies from 'cookies-js';
+import {
+  Modal, Button, Field, Input, Loading,
+} from 'buefy';
+import LoginRequest from '../models/LoginRequest';
+import UserRegistration from '../models/UserRegistration';
+import API from '../models/API';
+import User from '../models/User';
 
-import Cookies from "cookies-js";
-
-import { Modal, Button, Field, Input, Loading } from "buefy";
 
 Vue.use(Modal);
 Vue.use(Button);
@@ -48,8 +49,10 @@ Vue.use(Loading);
 
 @Component({})
 export default class SignupMenuComponent extends Vue {
-  isLoading: boolean = false;
-  message: String = "";
+  isLoading = false;
+
+  message = '';
+
   registration: UserRegistration = new UserRegistration();
 
   async signup(ev): Promise<void> {
@@ -62,9 +65,9 @@ export default class SignupMenuComponent extends Vue {
       loginRequest.Password = this.registration.Password;
       const sessionId = await loginRequest.login();
       API.getInstance().setToken(sessionId);
-      Cookies.set("token", sessionId);
+      Cookies.set('token', sessionId);
       const user = await User.getLoggedInUser();
-      this.$store.commit("setUser", user);
+      this.$store.commit('setUser', user);
       this.$parent.close();
     } catch (e) {
       this.isLoading = false;
