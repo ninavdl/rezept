@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "parcel build --experimental-scope-hoisting index.html",
-    "frontend": "parcel index.html"
+    "frontend": "parcel index.html",
+    "font": "font-build --help"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@mdi/font": "^5.0.45",
+    "@mdi/font-build": "^1.8.4",
     "@vue/component-compiler-utils": "^3.1.1",
     "babel-polyfill": "^6.26.0",
     "buefy": "^0.8.13",
@@ -27,7 +29,6 @@
     "vue-hot-reload-api": "^2.3.4",
     "vue-property-decorator": "^8.4.1",
     "vue-router": "^3.1.6",
-    "vue-spinner": "^1.0.3",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^3.1.3"
   }

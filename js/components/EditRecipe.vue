@@ -11,6 +11,8 @@ export default class EditRecipeComponent extends EditorBase {
   @Prop()
   recipeID!: number;
 
+  heading: String = "Edit recipe";
+
   async created(): Promise<void> {
     this.isLoading = true;
     await this.getRecipe();

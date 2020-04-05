@@ -5,6 +5,8 @@ import { Component } from "vue-property-decorator";
 
 @Component({})
 export default class AddRecipeComponent extends EditorBase {
+  heading: String = "Add recipe";
+
   async submit(ev) {
     ev.preventDefault();
     this.isLoading = true;

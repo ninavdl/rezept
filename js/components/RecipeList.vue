@@ -63,8 +63,8 @@
         </div>
       </b-collapse>
     </section>
-    <Loading text="Loading recipes" v-if="isLoading"></Loading>
-    <template v-else>
+    <div>
+      <div><b-loading :active="isLoading" :isFullPage="false" /></div>
       <section class="section">
         <b-message>
           <p v-if="recipeList.Results == 0">No recipe found :(</p>
@@ -89,22 +89,21 @@
           v-on:change="setPage"
         />
       </section>
-    </template>
+    </div>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import RecipeListItem from "./RecipeListItem.vue";
-import Loading from "./Loading.vue";
 import RecipeList from "../models/RecipeList";
 import User from "../models/User";
 import { Component } from "vue-property-decorator";
 
-import { Menu, Pagination, Collapse, Message } from "buefy";
+import { Menu, Pagination, Collapse, Message, Loading } from "buefy";
 import { Route } from "vue-router";
 
-[Menu, Pagination, Collapse, Message].forEach(c => Vue.use(c));
+[Menu, Pagination, Collapse, Message, Loading].forEach(c => Vue.use(c));
 
 class SearchObject {
   tags: String[];
@@ -122,8 +121,7 @@ class QueryObject {
 
 @Component({
   components: {
-    RecipeListItem,
-    Loading
+    RecipeListItem
   },
   async beforeRouteUpdate(to: Route, from: Route, next: Function) {
     this.isLoading = true;
