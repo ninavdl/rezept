@@ -26,7 +26,8 @@ export default async function (config) {
             { path: '/recipe/:recipeID/edit', name: 'editRecipe', component: EditRecipe, props: true },
             { path: '/recipe/add', name: 'addRecipe', component: AddRecipe },
             { path: '/recipe/:recipeID', name: "recipe", component: Recipe, props: true },
-        ]
+        ],
+        base: config.PathPrefix
     });
 
     const sessionId = Cookies.get("token");
