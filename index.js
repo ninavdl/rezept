@@ -4,8 +4,7 @@ import 'buefy/dist/buefy.css'
 import '@mdi/font/css/materialdesignicons.css'
 
 main({
-    "APIPrefix": "http://npad2:8080",
-    "AssetsPrefix": "/",
-    "PathPrefix": "",
-    "PageTitle": "rezept"
+    "APIPrefix": process.env.API_URL,
+    "PathPrefix": process.env.BASE_URL,
+    "PageTitle": process.env.PAGE_TITLE
 });
