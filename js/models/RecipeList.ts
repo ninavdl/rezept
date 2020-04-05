@@ -14,31 +14,28 @@ export default class RecipeList extends Model {
   public static async getRecipes(page: number, query: any): Promise<RecipeList> {
     let queryString = '';
     if ('tags' in query) {
-      for (const tag of query.tags) {
-        queryString += `&tag=${encodeURIComponent(tag)}`;
-      }
+      queryString += query.tags.map((tag) => `&tag=${encodeURIComponent(tag)}`).join('');
     }
     if ('user' in query) {
       queryString += `&user=${encodeURIComponent(query.user)}`;
     }
     if ('keywords' in query) {
-      for (const keyword of query.keywords) {
-        queryString += `&keyword=${encodeURIComponent(keyword)}`;
-      }
+      queryString += query.keywords.map(
+        (keyword) => `&keyword=${encodeURIComponent(keyword)}`,
+      ).join('');
     }
 
     const req: Response = await API.getInstance().GET(`recipes?page=${page}${queryString}`);
     const data: RecipeList = await req.json();
-    console.log(data);
     const r = new RecipeList();
     r.Pages = data.Pages;
     r.Page = data.Page;
-    r.Recipes = new Array<RecipeInfo>(data.Recipes.length);
     r.Results = data.Results;
-    for (const i in data.Recipes) {
-      r.Recipes[i] = new RecipeInfo();
-      r.Recipes[i].assign(data.Recipes[i]);
-    }
+    r.Recipes = data.Recipes.map((recipe) => {
+      const recipeInfo = new RecipeInfo();
+      recipeInfo.assign(recipe);
+      return recipeInfo;
+    });
 
     return r;
   }

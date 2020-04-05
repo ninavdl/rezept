@@ -1,5 +1,6 @@
 import Model from './Model';
 import API from './API';
+import LoginResponse from './LoginResponse';
 
 export default class LoginRequest extends Model {
   Username: string;
@@ -8,11 +9,6 @@ export default class LoginRequest extends Model {
 
   async login(): Promise<string> {
     const login = await LoginRequest.buildModel<LoginResponse>(API.getInstance().PUT('login', this), LoginResponse);
-    console.log(login);
     return login.SessionID;
   }
-}
-
-class LoginResponse extends Model {
-  SessionID = '';
 }

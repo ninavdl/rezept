@@ -7,7 +7,7 @@ import EditorBase from './EditorBase.vue';
 export default class AddRecipeComponent extends EditorBase {
   heading = 'Add recipe';
 
-  async submit(ev) {
+  async submit(ev): Promise<void> {
     ev.preventDefault();
     this.isLoading = true;
     const recipe = await this.$data.recipe.saveRecipe();

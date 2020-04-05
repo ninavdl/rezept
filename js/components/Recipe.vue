@@ -115,7 +115,8 @@ export default class RecipeComponent extends Vue {
 
   isLoading = true;
 
-  initialServings = 0; // required to calculate amounts of ingredients when the number of servings changes
+  // required to calculate amounts of ingredients when the number of servings change
+  initialServings = 0;
 
   async created(): Promise<void> {
     await this.getRecipe();
@@ -132,13 +133,12 @@ export default class RecipeComponent extends Vue {
 
   get canModify(): boolean {
     if (!this.isLoggedIn) return false;
-    if (this.recipe.Creator != null && this.recipe.Creator.ID == this.user.ID) return true;
+    if (this.recipe.Creator != null && this.recipe.Creator.ID === this.user.ID) return true;
     return this.user.IsAdmin;
   }
 
   async getRecipe(): Promise<void> {
     this.recipe = await Recipe.getRecipe(this.recipeID);
-    console.log(this.recipe);
     this.initialServings = this.recipe.Servings;
   }
 

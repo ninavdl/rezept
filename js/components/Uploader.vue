@@ -64,7 +64,6 @@ export default class UploaderComponent extends Vue {
     this.uploading = true;
     try {
       this.thisImage = await Image.uploadImage(file, (uploaded, size) => {
-        console.log(uploaded, size);
         this.uploaded = uploaded;
         this.fileSize = size;
       });

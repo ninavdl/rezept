@@ -25,7 +25,7 @@
           </b-field>
 
           <b-field label="Tags">
-            <b-taginput v-model="recipe.Tags" ellipsis icon="label" placeholder="Add a tag"></b-taginput>
+            <b-taginput v-model="recipe.Tags" ellipsis icon="label" placeholder="Add a tag" />
           </b-field>
 
           <b-field label="Short description that is shown in the recipe list">
@@ -78,7 +78,9 @@
               v-on:remove="recipe.Steps.splice(i, 1)"
             />
           </ol>
-          <b-button v-on:click="addStep" type="is-success" icon-left="plus-circle">Add step</b-button>
+          <b-button v-on:click="addStep" type="is-success" icon-left="plus-circle">
+            Add step
+          </b-button>
         </div>
       </section>
 
@@ -103,7 +105,6 @@ import Ingredient from '../models/Ingredient';
 import Step from '../models/Step';
 import Image from '../models/Image';
 
-
 Vue.use(Numberinput);
 Vue.use(Input);
 Vue.use(Taginput);
@@ -123,11 +124,11 @@ export default class EditorBaseComponent extends Vue {
 
   heading = '';
 
-  addIngredient(ev): void {
+  addIngredient(): void {
     this.recipe.Ingredients.push(new Ingredient());
   }
 
-  addStep(ev): void {
+  addStep(): void {
     this.recipe.Steps.push(new Step());
   }
 

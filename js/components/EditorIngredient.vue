@@ -35,7 +35,9 @@
           />
         </b-field>
         <p class="control">
-          <b-button v-on:click="$emit('remove')" type="is-danger" icon-left="delete">Delete</b-button>
+          <b-button v-on:click="$emit('remove')" type="is-danger" icon-left="delete">
+            Delete
+          </b-button>
         </p>
       </b-field>
       <b-field>

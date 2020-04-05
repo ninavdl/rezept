@@ -9,13 +9,13 @@ export default class API {
     this.apiUrl = apiUrl;
   }
 
-  public static init(apiUrl: string) {
+  public static init(apiUrl: string): void {
     API.instance = new API(apiUrl);
   }
 
   public static getInstance(): API {
     if (!API.instance) {
-      throw 'Must initialize API singleton first';
+      throw Error('Must initialize API singleton first');
     }
 
     return API.instance;
@@ -29,40 +29,31 @@ export default class API {
     return `${this.apiUrl}/${uri}`;
   }
 
-  requestObject(options: any): Record<string, any> {
-    if (this.token != null) {
-      if ('headers' in options) {
-        options.headers.Authorization = `Bearer ${this.token}`;
-      } else {
-        options.headers = {
-          Authorization: `Bearer ${this.token}`,
-        };
-      }
-    }
-    return options;
-  }
-
-  public async upload(method: string, uri: string, file: File, progress: (uploaded: number, fileSize: number) => void): Promise<any> {
-    const api = this;
+  public async upload(
+    method: string,
+    uri: string,
+    file: File,
+    progress: (uploaded: number, fileSize: number) => void,
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-      xhr.open(method, api.buildURL(uri), true);
+      xhr.open(method, this.buildURL(uri), true);
       xhr.onprogress = (e) => {
         progress(e.loaded, e.total);
       };
       xhr.onload = () => {
-        if (xhr.status == 201) {
+        if (xhr.status === 201) {
           resolve(xhr.response);
         } else {
-          reject(xhr.response.Error);
+          reject(new Error(xhr.response.Error));
         }
       };
       xhr.onerror = () => {
-        reject('Error');
+        reject(new Error('Error'));
       };
       xhr.setRequestHeader('Content-Type', file.type);
-      xhr.setRequestHeader('Authorization', `Bearer ${api.token}`);
+      xhr.setRequestHeader('Authorization', `Bearer ${this.token}`);
       xhr.send(file);
     });
   }

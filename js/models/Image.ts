@@ -8,9 +8,12 @@ export default class Image extends Model {
 
   ThumbnailURL: string;
 
-  static async uploadImage(file: File, onProgress: (uploaded: number, total: number) => void): Promise<Image> {
+  static async uploadImage(
+    file: File,
+    onProgress: (uploaded: number, total: number) => void,
+  ): Promise<Image> {
     const response = await API.getInstance().upload('PUT', 'image', file, onProgress);
 
-    return <Image>response;
+    return response as Image;
   }
 }

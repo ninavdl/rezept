@@ -9,11 +9,11 @@ import AddRecipe from './components/AddRecipe.vue';
 import EditRecipe from './components/EditRecipe.vue';
 import App from './components/App.vue';
 
-import API from './models/API.ts';
+import API from './models/API';
 
-import User from './models/User.ts';
+import User from './models/User';
 
-export default async function (config) {
+export default async function (config): Promise<void> {
   API.init(config.APIPrefix);
 
   Vue.use(VueRouter);
@@ -43,7 +43,7 @@ export default async function (config) {
     user = await User.getLoggedInUser();
   }
 
-  Vue.filter('round', (value, decimals) => Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals));
+  Vue.filter('round', (value, decimals) => Math.round(value * (10 ** decimals)) / (10 ** decimals));
   Vue.filter('formatDate', (date) => date.toLocaleDateString());
 
   const store = new Vuex.Store({
@@ -52,7 +52,7 @@ export default async function (config) {
       isLoggedIn: user != null,
     },
     mutations: {
-      setUser(state, newUser) {
+      setUser(state, newUser): void {
         state.user = { ...state.user, ...newUser };
         state.isLoggedIn = 'ID' in newUser;
       },

@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import main from './main.ts';
+import main from './main';
 import 'buefy/dist/buefy.css';
 import '@mdi/font/css/materialdesignicons.css';
 

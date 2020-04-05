@@ -57,7 +57,7 @@
               ></b-taginput>
             </b-field>
             <b-field label="Search by username">
-              <b-input v-model="search.user" v-on:input="updateSearch" placeholder="Username"></b-input>
+              <b-input v-model="search.user" v-on:input="updateSearch" placeholder="Username" />
             </b-field>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default class RecipeListComponent extends Vue {
   async created(): Promise<void> {
     this.query = this.$route.query;
     this.search = this.getSearchObject();
-    this.pageNum = 'page' in this.query ? parseInt(this.query.page) : 1;
+    this.pageNum = 'page' in this.query ? parseInt(this.query.page, 10) : 1;
     await this.getRecipes();
     this.isLoading = false;
   }
@@ -178,7 +178,7 @@ export default class RecipeListComponent extends Vue {
   getQueryObject(): QueryObject {
     const queryObject = new QueryObject();
     if (this.search.tags.length > 0) queryObject.tags = this.search.tags.join(',');
-    if (this.search.user != '') queryObject.user = this.search.user;
+    if (this.search.user !== '') queryObject.user = this.search.user;
     if (this.search.keywords.length > 0) queryObject.keywords = this.search.keywords.join(',');
     return queryObject;
   }
@@ -193,12 +193,12 @@ export default class RecipeListComponent extends Vue {
     queryObject.page = page.toString();
     this.$router.push({
       name: 'list',
-      query: <any>queryObject,
+      query: queryObject as any,
     });
   }
 
   updateSearch(): void {
-    this.$router.push({ name: 'list', query: <any> this.getQueryObject() });
+    this.$router.push({ name: 'list', query: this.getQueryObject() as any });
   }
 }
 </script>
