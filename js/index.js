@@ -1,7 +1,7 @@
 import 'babel-polyfill';
-import main from './js/main.ts';
-import 'buefy/dist/buefy.css'
-import '@mdi/font/css/materialdesignicons.css'
+import main from './main.ts';
+import 'buefy/dist/buefy.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 main({
     "APIPrefix": process.env.API_URL,
