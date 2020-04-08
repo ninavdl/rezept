@@ -5,5 +5,5 @@
     "DBPath": "${DB_PATH}",
     "ImagePath": "${IMAGE_PATH}",
     "ImageURL": "${IMAGE_URL}",
-    "SignupAllowed": "${SIGNUP_ALLOWED}"
+    "SignupAllowed": ${SIGNUP_ALLOWED}
 }
