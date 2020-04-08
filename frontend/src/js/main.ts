@@ -14,6 +14,7 @@ import API from './models/API';
 import User from './models/User';
 
 import { Metadata, setMetadata } from "./metadata";
+import PageData from './models/PageData';
 
 export default async function (config): Promise<void> {
   API.init(config.APIPrefix);
@@ -52,12 +53,16 @@ export default async function (config): Promise<void> {
   Vue.prototype.$pageTitle = config.PageTitle;
   document.title = config.PageTitle;
 
+  const pagedata: PageData = await PageData.getPageData();
+
+
   const store = new Vuex.Store({
     state: {
       user: user == null ? {} : user,
       isLoggedIn: user != null,
       pageTitle: config.PageTitle,
-      metadata: new Metadata()
+      metadata: new Metadata(),
+      pagedata: pagedata
     },
     mutations: {
       setUser(state, newUser): void {

@@ -41,6 +41,7 @@ func main() {
 		UploadPath:       config.ImagePath,
 		ImageURL:         config.ImageURL,
 		MaxThumbnailSize: 200,
+		SignupAllowed:    config.SignupAllowed,
 	})
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(config.ImagePath))))

@@ -14,6 +14,8 @@ type Config struct {
 
 	Address string
 	DBPath  string
+
+	SignupAllowed bool
 }
 
 func readConfig(path string) (Config, error) {

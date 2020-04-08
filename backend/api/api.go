@@ -112,6 +112,7 @@ type APIConfig struct {
 	UploadPath       string
 	MaxThumbnailSize uint
 	ImageURL         string
+	SignupAllowed    bool
 }
 
 type API struct {
@@ -148,6 +149,7 @@ func Init(db *db.DB, config APIConfig) *API {
 	api.router.GET(prefix+"/login", api.makeHandler(api.getLoggedInUser, false))
 	api.router.DELETE(prefix+"/login", api.makeHandler(api.logout, true))
 	api.router.PUT(prefix+"/image", api.makeHandler((api.uploadImage), true))
+	api.router.GET(prefix+"/data", api.makeHandler(api.getPageData, false))
 
 	api.router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Access-Control-Request-Method") != "" {

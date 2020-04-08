@@ -15,6 +15,7 @@ services:
       - DB_PATH=/data/rezept.sqlite
       - IMAGE_PATH=/data/images
       - IMAGE_URL=/api/images
+      - SIGNUP_ALLOWED=true
     volumes:
       - "./data:/data"
   reverse-proxy:

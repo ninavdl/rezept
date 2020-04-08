@@ -52,6 +52,10 @@ func (user *User) CanModifyRecipe(recipe *Recipe) bool {
 }
 
 func (api *API) registerUser(r request) error {
+	if !api.config.SignupAllowed {
+		return r.writeError("Signup is disabled", 404)
+	}
+
 	var reg UserRegistration
 	err := json.NewDecoder(r.req.Body).Decode(&reg)
 	if err != nil {
@@ -71,11 +75,16 @@ func (api *API) registerUser(r request) error {
 		return err
 	}
 
+	userCount := api.db.GetUserCount()
 	user := db.User{
 		Username:    reg.Username,
 		DisplayName: reg.DisplayName,
 		Password:    hash,
 		IsAdmin:     false,
+	}
+	// The first user has admin privileges by default
+	if userCount == 0 {
+		user.IsAdmin = true
 	}
 
 	err = api.db.AddUser(&user)

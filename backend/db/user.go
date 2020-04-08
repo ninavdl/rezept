@@ -20,6 +20,12 @@ type Session struct {
 	UserID    uint
 }
 
+func (db *DB) GetUserCount() int {
+	var count int
+	db.db.Table("users").Count(&count)
+	return count
+}
+
 func (db *DB) GetUserById(id uint) *User {
 	var user User
 	if db.db.Where("id = ?", id).First(&user).RecordNotFound() {

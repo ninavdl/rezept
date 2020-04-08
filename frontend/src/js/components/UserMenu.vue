@@ -13,7 +13,7 @@
     <b-navbar-item>
       <b-button type="is-primary" v-on:click="$emit('showLogin')">Login</b-button>
     </b-navbar-item>
-    <b-navbar-item>
+    <b-navbar-item v-if="signupAllowed">
       <b-button type="is-primary" v-on:click="$emit('showSignup')">Sign up</b-button>
     </b-navbar-item>
   </b-navbar-item>
@@ -37,12 +37,23 @@ Vue.use(Tag);
 export default class UserMenuComponent extends Vue {
   isLoggingOut = false;
 
+  created() {
+    // If no user signed up before, show the signup form to create an admin account
+    if (this.$store.state.pagedata.Users == 0) {
+      this.$emit("showSignup");
+    }
+  }
+
   get user(): User {
     return this.$store.state.user;
   }
 
   get isLoggedIn(): boolean {
     return this.$store.state.isLoggedIn;
+  }
+
+  get signupAllowed(): boolean {
+    return this.$store.state.pagedata.SignupAllowed;
   }
 
   async logout(): Promise<void> {

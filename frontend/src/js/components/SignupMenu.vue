@@ -9,6 +9,9 @@
         <p v-if="message != ''">{{ message }}</p>
       </header>
       <section class="modal-card-body">
+        <p v-if="isFirstUser">
+          Please create an admin account!
+        </p>
         <b-field label="Display name">
           <b-input type="string" v-model="registration.DisplayName" required />
         </b-field>
@@ -27,19 +30,16 @@
 </template>
 
 <script lang="ts">
-import 'reflect-metadata';
-import { Component } from 'vue-property-decorator';
-import Vue from 'vue';
+import "reflect-metadata";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
 
-import Cookies from 'cookies-js';
-import {
-  Modal, Button, Field, Input, Loading,
-} from 'buefy';
-import LoginRequest from '../models/LoginRequest';
-import UserRegistration from '../models/UserRegistration';
-import API from '../models/API';
-import User from '../models/User';
-
+import Cookies from "cookies-js";
+import { Modal, Button, Field, Input, Loading } from "buefy";
+import LoginRequest from "../models/LoginRequest";
+import UserRegistration from "../models/UserRegistration";
+import API from "../models/API";
+import User from "../models/User";
 
 Vue.use(Modal);
 Vue.use(Button);
@@ -51,7 +51,7 @@ Vue.use(Loading);
 export default class SignupMenuComponent extends Vue {
   isLoading = false;
 
-  message = '';
+  message = "";
 
   registration: UserRegistration = new UserRegistration();
 
@@ -65,14 +65,18 @@ export default class SignupMenuComponent extends Vue {
       loginRequest.Password = this.registration.Password;
       const sessionId = await loginRequest.login();
       API.getInstance().setToken(sessionId);
-      Cookies.set('token', sessionId);
+      Cookies.set("token", sessionId);
       const user = await User.getLoggedInUser();
-      this.$store.commit('setUser', user);
+      this.$store.commit("setUser", user);
       this.$parent.close();
     } catch (e) {
       this.isLoading = false;
       this.message = e;
     }
+  }
+
+  get isFirstUser(): boolean {
+    return this.$store.state.pagedata.Users === 0;
   }
 }
 </script>

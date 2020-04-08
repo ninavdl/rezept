@@ -4,5 +4,6 @@
     "Address": "0.0.0.0:8080",
     "DBPath": "./db.sqlite",
     "ImagePath": "./images",
-    "ImageURL": "http://localhost:8080/images"
+    "ImageURL": "http://localhost:8080/images",
+    "SignupAllowed": false
 }

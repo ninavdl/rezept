@@ -25,6 +25,7 @@ services:
       - DB_PATH=/data/rezept.sqlite
       - IMAGE_PATH=/data/images
       - IMAGE_URL=/api/images
+      - SIGNUP_ALLOWED=${SIGNUP_ALLOWED}
     volumes:
       - "./data:/data"
   reverse-proxy:
@@ -41,8 +42,9 @@ services:
 PAGE_TITLE=rezept
 LISTEN=8080
 VERSION=latest
+SIGNUP_ALLOWED=true
 ```
-3. Run with `docker-compose up` - the application should be available on port 8080.
+3. Run with `docker-compose up` - the application should be available on port 8080. When opened, you will be prompted to create an admin account.
 
 ## Running with docker (manual)
 
@@ -52,6 +54,7 @@ The backend docker container is available as `rezept/rezept-backend`. You should
 - `DB_PATH`: Where the database should be stored - ideally in a docker volume
 - `IMAGE_PATH`: Where images should be stored - ideally in a docker volume
 - `IMAGE_URL`: Prefix which should be prepended to image urls - it should correspond to where the /images resource will be available
+- `SIGNUP_ALLOWED`: Specifies whether new users are allowed to sign up (true or false)
 
 ### Frontend
 The frontend docker container is available as `rezept-frontend`. You should specify the following environment variables:
@@ -74,7 +77,8 @@ Clone this repository and then build the backend and frontend separately:
     "Address": "On which address to bind the HTTP server, host:port format",
     "DBPath": "Path to where the sqlite databse should be stored",
     "ImagePath": "Path to directory where images should be stored",
-    "ImageURL": "Prefix which should be prepended to image urls - it should correspond to where the /images resource will be available"
+    "ImageURL": "Prefix which should be prepended to image urls - it should correspond to where the /images resource will be available",
+    "SignupAllowed": true or false
 }
 ```
 5. Run `rezept [path-to-config.json]`
