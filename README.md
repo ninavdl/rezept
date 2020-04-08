@@ -41,7 +41,7 @@ services:
 ```
 PAGE_TITLE=rezept
 LISTEN=8080
-VERSION=latest
+VERSION=1.0.0
 SIGNUP_ALLOWED=true
 ```
 3. Run with `docker-compose up` - the application should be available on port 8080. When opened, you will be prompted to create an admin account.
