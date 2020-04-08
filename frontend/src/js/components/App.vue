@@ -4,7 +4,7 @@
       <b-navbar shadow spaced style="z-index: 10">
         <template slot="brand">
           <b-navbar-item tag="router-link" :to="{ name: 'list' }">
-            <h1 class="title">rezept</h1>
+            <h1 class="title">{{ $pageTitle }}</h1>
           </b-navbar-item>
         </template>
         <template slot="end">

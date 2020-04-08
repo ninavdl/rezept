@@ -82,19 +82,17 @@
 </template>
 
 <script lang="ts">
-import 'reflect-metadata';
-import { Prop, Component } from 'vue-property-decorator';
-import Vue from 'vue';
+import "reflect-metadata";
+import { Prop, Component } from "vue-property-decorator";
+import Vue from "vue";
 
-import {
-  Numberinput, Field, Navbar, Loading,
-} from 'buefy';
-import Recipe from '../models/Recipe';
-import User from '../models/User';
+import { Numberinput, Field, Navbar, Loading } from "buefy";
+import Recipe from "../models/Recipe";
+import User from "../models/User";
 
-import RecipeStep from './RecipeStep.vue';
-import RecipeIngredient from './RecipeIngredient.vue';
-
+import RecipeStep from "./RecipeStep.vue";
+import RecipeIngredient from "./RecipeIngredient.vue";
+import { Metadata } from "../metadata";
 
 Vue.use(Numberinput);
 Vue.use(Field);
@@ -104,8 +102,8 @@ Vue.use(Loading);
 @Component({
   components: {
     RecipeIngredient,
-    RecipeStep,
-  },
+    RecipeStep
+  }
 })
 export default class RecipeComponent extends Vue {
   @Prop()
@@ -120,6 +118,16 @@ export default class RecipeComponent extends Vue {
 
   async created(): Promise<void> {
     await this.getRecipe();
+    const metadata = new Metadata();
+    metadata.title = this.recipe.Name;
+    metadata.description = this.recipe.ShortDescription;
+    metadata.author =
+      this.recipe.Creator != null ? this.recipe.Creator.DisplayName : null;
+    metadata.date = this.recipe.UpdatedAt;
+    metadata.imageURL =
+      this.recipe.Image != null ? this.recipe.Image.URL : null;
+    metadata.tags = this.recipe.Tags;
+    this.$store.commit("setMetadata", metadata);
     this.isLoading = false;
   }
 
@@ -133,7 +141,8 @@ export default class RecipeComponent extends Vue {
 
   get canModify(): boolean {
     if (!this.isLoggedIn) return false;
-    if (this.recipe.Creator != null && this.recipe.Creator.ID === this.user.ID) return true;
+    if (this.recipe.Creator != null && this.recipe.Creator.ID === this.user.ID)
+      return true;
     return this.user.IsAdmin;
   }
 
@@ -144,7 +153,7 @@ export default class RecipeComponent extends Vue {
 
   async deleteRecipe(): Promise<void> {
     await this.recipe.deleteRecipe();
-    this.$router.push({ name: 'list' });
+    this.$router.push({ name: "list" });
   }
 }
 </script>

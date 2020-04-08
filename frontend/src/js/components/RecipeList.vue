@@ -64,7 +64,9 @@
       </b-collapse>
     </section>
     <div>
-      <div><b-loading :active="isLoading" :isFullPage="false" /></div>
+      <div>
+        <b-loading :active="isLoading" :isFullPage="false" />
+      </div>
       <section class="section">
         <b-message>
           <p v-if="recipeList.Results == 0">No recipe found :(</p>
@@ -94,18 +96,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
-import {
-  Menu, Pagination, Collapse, Message, Loading,
-} from 'buefy';
-import { Route } from 'vue-router';
-import RecipeListItem from './RecipeListItem.vue';
-import RecipeList from '../models/RecipeList';
-import User from '../models/User';
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+import { Menu, Pagination, Collapse, Message, Loading } from "buefy";
+import { Route } from "vue-router";
+import RecipeListItem from "./RecipeListItem.vue";
+import RecipeList from "../models/RecipeList";
+import User from "../models/User";
+import { Metadata } from "../metadata";
 
-
-[Menu, Pagination, Collapse, Message, Loading].forEach((c) => Vue.use(c));
+[Menu, Pagination, Collapse, Message, Loading].forEach(c => Vue.use(c));
 
 class SearchObject {
   tags: string[];
@@ -129,7 +129,7 @@ class QueryObject {
 
 @Component({
   components: {
-    RecipeListItem,
+    RecipeListItem
   },
   async beforeRouteUpdate(to: Route, from: Route, next: Function) {
     this.isLoading = true;
@@ -138,7 +138,7 @@ class QueryObject {
     await this.getRecipes();
     this.isLoading = false;
     next();
-  },
+  }
 })
 export default class RecipeListComponent extends Vue {
   recipeList: RecipeList = new RecipeList();
@@ -161,30 +161,35 @@ export default class RecipeListComponent extends Vue {
 
   getSearchObject(): SearchObject {
     const q = new SearchObject();
-    q.tags = 'tags' in this.query ? this.query.tags.split(',') : [];
-    q.user = 'user' in this.query ? this.query.user : '';
-    q.keywords = 'keywords' in this.query ? this.query.keywords.split(',') : [];
+    q.tags = "tags" in this.query ? this.query.tags.split(",") : [];
+    q.user = "user" in this.query ? this.query.user : "";
+    q.keywords = "keywords" in this.query ? this.query.keywords.split(",") : [];
     return q;
   }
 
   async created(): Promise<void> {
     this.query = this.$route.query;
     this.search = this.getSearchObject();
-    this.pageNum = 'page' in this.query ? parseInt(this.query.page, 10) : 1;
+    this.pageNum = "page" in this.query ? parseInt(this.query.page, 10) : 1;
     await this.getRecipes();
     this.isLoading = false;
   }
 
   getQueryObject(): QueryObject {
     const queryObject = new QueryObject();
-    if (this.search.tags.length > 0) queryObject.tags = this.search.tags.join(',');
-    if (this.search.user !== '') queryObject.user = this.search.user;
-    if (this.search.keywords.length > 0) queryObject.keywords = this.search.keywords.join(',');
+    if (this.search.tags.length > 0)
+      queryObject.tags = this.search.tags.join(",");
+    if (this.search.user !== "") queryObject.user = this.search.user;
+    if (this.search.keywords.length > 0)
+      queryObject.keywords = this.search.keywords.join(",");
     return queryObject;
   }
 
   async getRecipes(): Promise<void> {
     this.recipeList = await RecipeList.getRecipes(this.pageNum, this.search);
+    const metadata = new Metadata();
+    metadata.title = "Recipes";
+    this.$store.commit("setMetadata", metadata);
   }
 
   async setPage(page: number): Promise<void> {
@@ -192,13 +197,13 @@ export default class RecipeListComponent extends Vue {
     const queryObject = this.getQueryObject();
     queryObject.page = page.toString();
     this.$router.push({
-      name: 'list',
-      query: queryObject as any,
+      name: "list",
+      query: queryObject as any
     });
   }
 
   updateSearch(): void {
-    this.$router.push({ name: 'list', query: this.getQueryObject() as any });
+    this.$router.push({ name: "list", query: this.getQueryObject() as any });
   }
 }
 </script>

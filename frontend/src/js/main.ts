@@ -13,6 +13,8 @@ import API from './models/API';
 
 import User from './models/User';
 
+import { Metadata, setMetadata } from "./metadata";
+
 export default async function (config): Promise<void> {
   API.init(config.APIPrefix);
 
@@ -46,16 +48,26 @@ export default async function (config): Promise<void> {
   Vue.filter('round', (value, decimals) => Math.round(value * (10 ** decimals)) / (10 ** decimals));
   Vue.filter('formatDate', (date) => date.toLocaleDateString());
 
+
+  Vue.prototype.$pageTitle = config.PageTitle;
+  document.title = config.PageTitle;
+
   const store = new Vuex.Store({
     state: {
       user: user == null ? {} : user,
       isLoggedIn: user != null,
+      pageTitle: config.PageTitle,
+      metadata: new Metadata()
     },
     mutations: {
       setUser(state, newUser): void {
         state.user = { ...state.user, ...newUser };
         state.isLoggedIn = 'ID' in newUser;
       },
+      setMetadata(state, metadata: Metadata): void {
+        state.metadata = metadata;
+        setMetadata(state.pageTitle, metadata);
+      }
     },
   });
 

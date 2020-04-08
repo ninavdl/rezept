@@ -10,34 +10,25 @@
 <body>
     <div id="app"></div>
     <script>
-        if (process.env.NODE_ENV === 'development') {
-            // For development environments, config is fetched from environment variables (e.g. .env files)
+        try {
             window.REZEPT_CONFIG = {
                 APIPrefix: process.env.API_URL,
                 PathPrefix: process.env.BASE_URL,
                 PageTitle: process.env.PAGE_TITLE
             };
-        } else {
-            if (typeof process == "undefined") {
-                // For dockerized production environments, config is injected here by docker-nginx-entry.sh
-                window.REZEPT_CONFIG = {
-                    APIPrefix: "${API_URL}",
-                    PathPrefix: "${BASE_URL}",
-                    PageTitle: "${PAGE_TITLE}"
-                }
-            } else {
-                // Otherwise it is injected here by parcel
-                window.REZEPT_CONFIG = {
-                    APIPrefix: process.env.API_URL,
-                    PathPrefix: process.env.BASE_URL,
-                    PageTitle: process.env.PAGE_TITLE
-                };
+        } catch (ReferenceError) {
+            // For dockerized production environments, config is injected here by docker-nginx-entry.sh
+            window.REZEPT_CONFIG = {
+                APIPrefix: "${API_URL}",
+                PathPrefix: "${BASE_URL}",
+                PageTitle: "${PAGE_TITLE}"
             }
-
-            if (window.REZEPT_CONFIG.APIPrefix == "") window.REZEPT_CONFIG.APIPrefix = "/api";
-            if (window.REZEPT_CONFIG.PathPrefix == "") window.REZEPT_CONFIG.PathPrefix = "/";
-            if (window.REZEPT_CONFIG.PageTitle == "") window.REZEPT_CONFIG.PageTitle = "rezept";
         }
+
+        if (window.REZEPT_CONFIG.APIPrefix == "") window.REZEPT_CONFIG.APIPrefix = "/api";
+        if (window.REZEPT_CONFIG.PathPrefix == "") window.REZEPT_CONFIG.PathPrefix = "/";
+        if (window.REZEPT_CONFIG.PageTitle == "") window.REZEPT_CONFIG.PageTitle = "rezept";
+
     </script>
     <script src="js/index.js"></script>
 </body>
