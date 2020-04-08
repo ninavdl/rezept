@@ -18,12 +18,22 @@
                 PageTitle: process.env.PAGE_TITLE
             };
         } else {
-            // For production environments, config is injected here by docker-nginx-entry.sh
-            window.REZEPT_CONFIG = {
-                APIPrefix: "${API_URL}",
-                PathPrefix: "${BASE_URL}",
-                PageTitle: "${PAGE_TITLE}"
+            if (typeof process == "undefined") {
+                // For dockerized production environments, config is injected here by docker-nginx-entry.sh
+                window.REZEPT_CONFIG = {
+                    APIPrefix: "${API_URL}",
+                    PathPrefix: "${BASE_URL}",
+                    PageTitle: "${PAGE_TITLE}"
+                }
+            } else {
+                // Otherwise it is injected here by parcel
+                window.REZEPT_CONFIG = {
+                    APIPrefix: process.env.API_URL,
+                    PathPrefix: process.env.BASE_URL,
+                    PageTitle: process.env.PAGE_TITLE
+                };
             }
+
             if (window.REZEPT_CONFIG.APIPrefix == "") window.REZEPT_CONFIG.APIPrefix = "/api";
             if (window.REZEPT_CONFIG.PathPrefix == "") window.REZEPT_CONFIG.PathPrefix = "/";
             if (window.REZEPT_CONFIG.PageTitle == "") window.REZEPT_CONFIG.PageTitle = "rezept";
