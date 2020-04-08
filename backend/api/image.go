@@ -95,6 +95,11 @@ func getImageFormat(r io.Reader) (string, error) {
 }
 
 func (api *API) copyImageAndThumbnail(img image.Image, id uint) error {
+	err := api.CreateImageDir()
+	if err != nil {
+		return err
+	}
+
 	file, err := os.Create(api.GetImagePath(id))
 	if err != nil {
 		return err

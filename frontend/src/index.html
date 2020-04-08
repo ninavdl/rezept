@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>rezept</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+        if (process.env.NODE_ENV === 'development') {
+            // For development environments, config is fetched from environment variables (e.g. .env files)
+            window.REZEPT_CONFIG = {
+                APIPrefix: process.env.API_URL,
+                PathPrefix: process.env.BASE_URL,
+                PageTitle: process.env.PAGE_TITLE
+            };
+        } else {
+            // For production environments, config is injected here by docker-nginx-entry.sh
+            window.REZEPT_CONFIG = {
+                APIPrefix: "${API_URL}",
+                PathPrefix: "${BASE_URL}",
+                PageTitle: "${PAGE_TITLE}"
+            }
+            if (window.REZEPT_CONFIG.APIPrefix == "") window.REZEPT_CONFIG.APIPrefix = "/api";
+            if (window.REZEPT_CONFIG.PathPrefix == "") window.REZEPT_CONFIG.PathPrefix = "/";
+            if (window.REZEPT_CONFIG.PageTitle == "") window.REZEPT_CONFIG.PageTitle = "rezept";
+        }
+    </script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

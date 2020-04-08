@@ -11,8 +11,6 @@ func InitDB(path string) (*DB, error) {
 		return nil, err
 	}
 
-	db.LogMode(true)
-
 	db.AutoMigrate(&Recipe{}, &Ingredient{}, &Step{}, &User{}, &Session{}, &Tag{}, &Image{})
 
 	return &DB{

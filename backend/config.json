@@ -2,7 +2,7 @@
     "PathPrefix": "",
     "APIPrefix": "",
     "Address": "0.0.0.0:8080",
-    "DBPath": "./db.sqlite",
+    "DBPath": "/data/db.sqlite",
     "ImagePath": "./images",
     "ImageURL": "http://localhost:8080/images"
 }

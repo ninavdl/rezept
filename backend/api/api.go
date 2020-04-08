@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/go-playground/locales/en"
@@ -172,6 +173,10 @@ func (api *API) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	api.router.ServeHTTP(w, req)
+}
+
+func (api *API) CreateImageDir() error {
+	return os.MkdirAll(api.config.UploadPath, 0755)
 }
 
 func (api *API) GetImagePath(id uint) string {

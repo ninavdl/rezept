@@ -1,0 +1,26 @@
+version: '3'
+services:
+  frontend:
+    image: 'rezept-frontend:${VERSION}'
+    environment:
+      - API_URL=/api
+      - BASE_URL=/
+      - PAGE_TITLE=${PAGE_TITLE}
+  backend:
+    image: 'rezept-backend:${VERSION}'
+    environment:
+      - PATH_PREFIX=/
+      - API_PREFIX=/
+      - BIND_ADDRESS=0.0.0.0:8080
+      - DB_PATH=/data/rezept.sqlite
+      - IMAGE_PATH=/data/images
+      - IMAGE_URL=/api/images
+    volumes:
+      - "./data:/data"
+  reverse-proxy:
+    image: 'rezept-reverse-proxy:${VERSION}'
+    ports:
+      - "${LISTEN}:80"
+    depends_on:
+      - frontend
+      - backend

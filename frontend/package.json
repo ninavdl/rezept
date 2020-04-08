@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "parcel build --experimental-scope-hoisting index.html",
-    "frontend": "parcel index.html",
-    "lint": "eslint . --ext .js,.ts,.vue"
+    "build": "rm -f dist/* && parcel build --no-source-maps --no-autoinstall src/index.html",
+    "frontend": "parcel src/index.html",
+    "lint": "eslint src --ext .js,.ts,.vue"
   },
   "author": "",
   "license": "MIT",
