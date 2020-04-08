@@ -11,13 +11,13 @@ The easiest way to setup rezept is by using docker-compose.
 version: '3'
 services:
   frontend:
-    image: 'rezept-frontend:${VERSION}'
+    image: 'rezept/rezept-frontend:${VERSION}'
     environment:
       - API_URL=/api
       - BASE_URL=/
       - PAGE_TITLE=${PAGE_TITLE}
   backend:
-    image: 'rezept-backend:${VERSION}'
+    image: 'rezept/rezept-backend:${VERSION}'
     environment:
       - PATH_PREFIX=/
       - API_PREFIX=/
@@ -29,7 +29,7 @@ services:
     volumes:
       - "./data:/data"
   reverse-proxy:
-    image: 'rezept-reverse-proxy:${VERSION}'
+    image: 'rezept/rezept-reverse-proxy:${VERSION}'
     ports:
       - "${LISTEN}:80"
     depends_on:
