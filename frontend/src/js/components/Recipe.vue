@@ -74,7 +74,7 @@
         <div class="container">
           <h3 class="title">Steps</h3>
           <ol>
-            <RecipeStep v-for="(step, i) in recipe.Steps" v-bind:step="step" :key="'step' + i" />
+            <RecipeStep v-for="(step, i) in recipe.Steps" v-bind:step="step" v-bind:factor="recipe.Servings / initialServings" :key="'step' + i" />
           </ol>
         </div>
       </section>
