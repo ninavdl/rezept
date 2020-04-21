@@ -2,7 +2,8 @@
   <main class="recipe-list section">
     <header class="level is-mobile">
       <div class="level-left">
-        <h2 class="level-item title">Recipes</h2>
+        <h2 class="level-item title" v-if="!draftList">Recipes</h2>
+        <h2 class="level-item title" v-else>My drafts</h2>
       </div>
       <div class="level-right">
         <router-link
@@ -13,7 +14,7 @@
       </div>
     </header>
 
-    <section class="section">
+    <section class="section" v-if="!draftList">
       <b-collapse
         class="card"
         animation="slide"
@@ -96,8 +97,9 @@
 </template>
 
 <script lang="ts">
+import "reflect-metadata";
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Prop, Component } from "vue-property-decorator";
 import { Menu, Pagination, Collapse, Message, Loading } from "buefy";
 import { Route } from "vue-router";
 import RecipeListItem from "./RecipeListItem.vue";
@@ -141,6 +143,9 @@ class QueryObject {
   }
 })
 export default class RecipeListComponent extends Vue {
+  @Prop()
+  draftList: boolean;
+
   recipeList: RecipeList = new RecipeList();
 
   isLoading = true;
@@ -168,6 +173,11 @@ export default class RecipeListComponent extends Vue {
   }
 
   async created(): Promise<void> {
+    if (this.draftList) {
+      await this.getDrafts();
+      this.isLoading = false;
+      return;
+    }
     this.query = this.$route.query;
     this.search = this.getSearchObject();
     this.pageNum = "page" in this.query ? parseInt(this.query.page, 10) : 1;
@@ -189,6 +199,13 @@ export default class RecipeListComponent extends Vue {
     this.recipeList = await RecipeList.getRecipes(this.pageNum, this.search);
     const metadata = new Metadata();
     metadata.title = "Recipes";
+    this.$store.commit("setMetadata", metadata);
+  }
+
+  async getDrafts(): Promise<void> {
+    this.recipeList = await RecipeList.getDrafts();
+    const metadata = new Metadata();
+    metadata.title = "Drafts";
     this.$store.commit("setMetadata", metadata);
   }
 

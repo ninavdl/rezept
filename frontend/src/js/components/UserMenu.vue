@@ -7,6 +7,10 @@
         tag="router-link"
         :to="{ name: 'list', query: { user: user.Username } }"
       >My recipes</b-navbar-item>
+      <b-navbar-item
+        tag="router-link"
+        :to="{ name: 'drafts' }"
+      >My drafts</b-navbar-item>
     </b-navbar-dropdown>
   </div>
   <b-navbar-item tag="div" v-else>
@@ -20,15 +24,14 @@
 </template>
 
 <script lang="ts">
-import 'reflect-metadata';
-import { Component } from 'vue-property-decorator';
-import Vue from 'vue';
+import "reflect-metadata";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
 
-import Cookies from 'cookies-js';
-import { Button, Tag } from 'buefy';
-import User from '../models/User';
-import API from '../models/API';
-
+import Cookies from "cookies-js";
+import { Button, Tag } from "buefy";
+import User from "../models/User";
+import API from "../models/API";
 
 Vue.use(Button);
 Vue.use(Tag);
@@ -59,9 +62,9 @@ export default class UserMenuComponent extends Vue {
   async logout(): Promise<void> {
     this.isLoggingOut = true;
     await User.logout();
-    this.$store.commit('setUser', {});
+    this.$store.commit("setUser", {});
     API.getInstance().setToken(null);
-    Cookies.expire('token');
+    Cookies.expire("token");
     this.isLoggingOut = false;
   }
 }

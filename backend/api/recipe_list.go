@@ -55,6 +55,25 @@ type RecipeList struct {
 	Results uint
 }
 
+func (api *API) listDrafts(r request) error {
+	dbRecipes, err := api.db.GetDrafts(r.user.ID)
+	if err != nil {
+		return err
+	}
+
+	recipes := make([]RecipeInfo, len(dbRecipes))
+	for i, r := range dbRecipes {
+		recipes[i] = api.newRecipeInfo(&r)
+	}
+
+	return r.writeJson(RecipeList{
+		Recipes: recipes,
+		Page:    1,
+		Pages:   1,
+		Results: uint(len(recipes)),
+	})
+}
+
 func (api *API) listRecipes(r request) error {
 	queryValues := r.req.URL.Query()
 	pageVal := queryValues.Get("page")

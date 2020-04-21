@@ -35,6 +35,9 @@ export default async function (config): Promise<void> {
       {
         path: '/recipe/:recipeID', name: 'recipe', component: Recipe, props: true,
       },
+      {
+        path: '/drafts', name: 'drafts', component: RecipeList, props: { draftList: true }
+      }
     ],
     base: config.PathPrefix,
   });

@@ -78,11 +78,16 @@
               v-on:remove="recipe.Steps.splice(i, 1)"
             />
           </ol>
-          <b-button v-on:click="addStep" type="is-success" icon-left="plus-circle">
-            Add step
-          </b-button>
+          <b-button v-on:click="addStep" type="is-success" icon-left="plus-circle">Add step</b-button>
         </div>
       </section>
+
+      <div class="field">
+        <b-checkbox v-model="recipe.Published">
+          <span v-if="recipe.Published">Recipe will be published</span>
+          <span v-else>Recipe will be saved as draft</span>
+        </b-checkbox>
+      </div>
 
       <b-button tag="input" native-type="submit" type="is-primary" value="Save" expanded />
     </form>
@@ -90,39 +95,38 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
 
-import {
-  Numberinput, Input, Taginput, Loading,
-} from 'buefy';
-import EditorStep from './EditorStep.vue';
-import EditorIngredient from './EditorIngredient.vue';
-import Uploader from './Uploader.vue';
+import { Numberinput, Input, Taginput, Loading, Checkbox } from "buefy";
+import EditorStep from "./EditorStep.vue";
+import EditorIngredient from "./EditorIngredient.vue";
+import Uploader from "./Uploader.vue";
 
-import Recipe from '../models/Recipe';
-import Ingredient from '../models/Ingredient';
-import Step from '../models/Step';
-import Image from '../models/Image';
+import Recipe from "../models/Recipe";
+import Ingredient from "../models/Ingredient";
+import Step from "../models/Step";
+import Image from "../models/Image";
 
 Vue.use(Numberinput);
 Vue.use(Input);
 Vue.use(Taginput);
 Vue.use(Loading);
+Vue.use(Checkbox);
 
 @Component({
   components: {
     EditorStep,
     EditorIngredient,
-    Uploader,
-  },
+    Uploader
+  }
 })
 export default class EditorBaseComponent extends Vue {
   recipe: Recipe = new Recipe();
 
   isLoading = false;
 
-  heading = '';
+  heading = "";
 
   addIngredient(): void {
     this.recipe.Ingredients.push(new Ingredient());

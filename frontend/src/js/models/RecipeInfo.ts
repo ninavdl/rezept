@@ -15,6 +15,8 @@ export default class RecipeInfo extends Model {
 
   Image: Image = null;
 
+  Published: boolean = true;
+
   public static async getRecipes(): Promise<RecipeInfo[]> {
     return this.buildModels<RecipeInfo>(API.getInstance().GET('recipes'), RecipeInfo);
   }
