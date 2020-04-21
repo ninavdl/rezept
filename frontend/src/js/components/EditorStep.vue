@@ -2,7 +2,7 @@
   <li class="column is-full">
     <div class="box">
       <b-field grouped>
-        <b-field expanded label="Text">
+        <b-field expanded label="Text" message="You can enclose numbers in square brackets to scale them with the amount of servings">
           <b-input type="textarea" required v-model="thisStep.Text" v-on:input="updateStepText" />
         </b-field>
         <b-field label="Picture">
