@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"strconv"
 	"time"
 
@@ -235,6 +236,14 @@ func (api *API) updateRecipe(r request) error {
 	if err != nil {
 		return err
 	}
+
+	go func() {
+		err := api.deleteUnlinkedImages()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
 	return r.writeJson(api.newRecipe(&dbRecipe))
 }
 
@@ -259,6 +268,13 @@ func (api *API) deleteRecipe(r request) error {
 	if err != nil {
 		return err
 	}
+
+	go func() {
+		err := api.deleteUnlinkedImages()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	return nil
 }

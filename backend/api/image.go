@@ -125,3 +125,23 @@ func (api *API) copyImageAndThumbnail(img image.Image, id uint) error {
 
 	return nil
 }
+
+func (api *API) deleteUnlinkedImages() error {
+	ids, err := api.db.ListAndDeleteUnusedImages()
+	if err != nil {
+		return err
+	}
+
+	for _, id := range ids {
+		err = os.Remove(api.GetImagePath(id))
+		if err != nil {
+			return err
+		}
+		err = os.Remove(api.GetThumbnailPath(id))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
