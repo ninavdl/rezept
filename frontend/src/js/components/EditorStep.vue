@@ -3,7 +3,7 @@
     <div class="box">
       <b-field grouped>
         <b-field expanded label="Text">
-          <b-input type="textarea" required v-model="thisStep.Text" v-on:change="updateStepText" />
+          <b-input type="textarea" required v-model="thisStep.Text" v-on:input="updateStepText" />
         </b-field>
         <b-field label="Picture">
           <Uploader v-bind:image="thisStep.Image" v-on:setImage="setImage"></Uploader>
