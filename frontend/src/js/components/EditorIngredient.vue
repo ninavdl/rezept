@@ -10,7 +10,7 @@
             pattern="\d+((,|.)\d+)?"
             validation-message="Please enter a number"
             placeholder="Amount"
-            v-on:change="$emit('update:ingredient', thisIngredient)"
+            v-on:input="$emit('update:ingredient', thisIngredient)"
           />
         </b-field>
         <b-field expanded>
@@ -20,7 +20,7 @@
             maxlength="10"
             placeholder="Unit"
             expanded
-            v-on:change="$emit('update:ingredient', thisIngredient)"
+            v-on:input="$emit('update:ingredient', thisIngredient)"
           />
         </b-field>
       </b-field>
@@ -31,7 +31,7 @@
             required
             expanded
             placeholder="Name"
-            v-on:change="$emit('update:ingredient', thisIngredient)"
+            v-on:input="$emit('update:ingredient', thisIngredient)"
           />
         </b-field>
         <p class="control">
