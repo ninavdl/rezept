@@ -75,6 +75,7 @@ type Recipe struct {
 	Creator          *User
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	Published        bool
 }
 
 func (r *Recipe) toDB() db.Recipe {
@@ -107,6 +108,7 @@ func (r *Recipe) toDB() db.Recipe {
 			CreatedAt:        r.CreatedAt,
 			UpdatedAt:        r.UpdatedAt,
 			ImageID:          imgID,
+			Published:        r.Published,
 		},
 		Creator:     creator,
 		Description: r.Description,
@@ -153,6 +155,7 @@ func (api *API) newRecipe(r *db.Recipe) Recipe {
 		UpdatedAt:        r.UpdatedAt,
 		Creator:          creator,
 		Image:            image,
+		Published:        r.Published,
 	}
 }
 
@@ -166,7 +169,14 @@ func (api *API) getRecipe(r request) error {
 	if dbRecipe == nil {
 		return r.writeError("Recipe not found", 404)
 	}
-	return r.writeJson(api.newRecipe(dbRecipe))
+
+	recipe := api.newRecipe(dbRecipe)
+
+	if !recipe.Published && r.user != nil && !r.user.CanModifyRecipe(&recipe) {
+		return r.writeError("User cannot access recipe", 403)
+	}
+
+	return r.writeJson(recipe)
 }
 
 func (api *API) putRecipe(r request) error {

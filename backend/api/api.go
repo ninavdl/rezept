@@ -144,6 +144,7 @@ func Init(db *db.DB, config APIConfig) *API {
 	api.router.PUT(prefix+"/recipes", api.makeHandler(api.putRecipe, true))
 	api.router.POST(prefix+"/recipes/:id", api.makeHandler(api.updateRecipe, true))
 	api.router.DELETE(prefix+"/recipes/:id", api.makeHandler(api.deleteRecipe, true))
+	api.router.GET(prefix+"/drafts", api.makeHandler(api.listDrafts, true))
 	api.router.PUT(prefix+"/users", api.makeHandler(api.registerUser, false))
 	api.router.PUT(prefix+"/login", api.makeHandler(api.login, false))
 	api.router.GET(prefix+"/login", api.makeHandler(api.getLoggedInUser, false))

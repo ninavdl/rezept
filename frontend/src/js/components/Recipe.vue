@@ -1,5 +1,5 @@
 <template>
-  <main class="recipe">
+  <main class="recipe" v-bind:class="{ draft: !recipe.Published }">
     <div>
       <b-loading :active="isLoading" />
     </div>
@@ -9,6 +9,7 @@
           <h2 class="title" v-if="recipe.Name == ''">Recipe</h2>
           <h2 class="title" v-else>
             {{recipe.Name}}
+            <span v-if="!recipe.Published">(draft)</span>
             <small v-if="recipe.Creator != null" class="subtitle">
               by
               <router-link
@@ -157,3 +158,10 @@ export default class RecipeComponent extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.draft {
+  border: 0.5em dashed lightgray;
+  border-top: 0;
+}
+</style>

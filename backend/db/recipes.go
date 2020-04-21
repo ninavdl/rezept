@@ -15,6 +15,7 @@ type RecipeInfo struct {
 	ShortDescription string
 	Image            *Image
 	ImageID          uint
+	Published        bool `gorm:"default:true"`
 }
 
 type RecipeFilter struct {
@@ -48,13 +49,23 @@ func (f RecipeFilter) apply(db *gorm.DB) *gorm.DB {
 
 func (db *DB) CountRecipes(filter RecipeFilter) uint {
 	var count uint
-	db.db.Scopes(filter.apply).Table("recipes").Count(&count)
+	db.db.Scopes(filter.apply).Where("published = 1").Table("recipes").Count(&count)
 	return count
 }
 
 func (db *DB) GetRecipes(filter RecipeFilter, offset, count uint) ([]RecipeInfo, error) {
 	var recipeInfos []RecipeInfo
-	err := db.db.Scopes(filter.apply).Table("recipes").Preload("Image").Limit(count).Offset(offset).Find(&recipeInfos).Error
+	err := db.db.Scopes(filter.apply).Where("published = 1").Table("recipes").Preload("Image").Limit(count).Offset(offset).Find(&recipeInfos).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return recipeInfos, nil
+}
+
+func (db *DB) GetDrafts(user uint) ([]RecipeInfo, error) {
+	var recipeInfos []RecipeInfo
+	err := db.db.Where("published = 0").Where("creator_id = ?", user).Table("recipes").Preload("Image").Find(&recipeInfos).Error
 	if err != nil {
 		return nil, err
 	}
