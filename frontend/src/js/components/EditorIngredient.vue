@@ -16,7 +16,6 @@
         <b-field expanded>
           <b-input
             v-model="thisIngredient.Unit"
-            required
             maxlength="10"
             placeholder="Unit"
             expanded

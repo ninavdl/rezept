@@ -13,8 +13,8 @@ import (
 type Ingredient struct {
 	Name   string          `validate:"required"`
 	Amount decimal.Decimal `validate:"numeric"`
-	Unit   string
-	Note   string `validate:"max=10"`
+	Unit   string          `validate:"max=10"`
+	Note   string
 }
 
 func (i *Ingredient) toDB() db.Ingredient {
