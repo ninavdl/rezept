@@ -44,7 +44,6 @@
         <b-field>
           <b-input
             v-model="thisIngredient.Note"
-            required
             placeholder="Note"
             v-on:change="$emit('update:ingredient', thisIngredient)"
           />
